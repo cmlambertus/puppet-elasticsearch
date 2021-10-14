@@ -6,8 +6,8 @@ require 'puppet_x/elastic/deep_implode'
 module Puppet::Parser::Functions
   newfunction(
     :deep_implode,
-    :type => :rvalue,
-    :doc => <<-'ENDHEREDOC') do |args|
+    type: :rvalue,
+    doc: <<-'ENDHEREDOC') do |args|
     Recursively flattens all keys of a hash into a dot-notated
     hash, deeply merging duplicate key values by natively combining
     them and returns the resulting hash.

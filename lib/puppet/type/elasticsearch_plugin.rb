@@ -3,7 +3,7 @@ Puppet::Type.newtype(:elasticsearch_plugin) do
 
   ensurable
 
-  newparam(:name, :namevar => true) do
+  newparam(:name, namevar: true) do
     desc 'An arbitrary name used as the identity of the resource.'
   end
 

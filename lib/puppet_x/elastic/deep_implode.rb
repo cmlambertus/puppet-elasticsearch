@@ -19,9 +19,9 @@ module Puppet_X
           implode(new_hash, value, new_path)
         else
           new_key = new_path.join('.')
-          if value.is_a? Array \
-              and new_hash.key? new_key \
-              and new_hash[new_key].is_a? Array
+          if value.is_a?(Array) \
+              && new_hash.key?(new_key) \
+              && new_hash[new_key].is_a?(Array)
             new_hash[new_key] += value
           else
             new_hash[new_key] ||= value

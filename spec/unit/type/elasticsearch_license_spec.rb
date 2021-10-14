@@ -8,9 +8,9 @@ describe Puppet::Type.type(:elasticsearch_license) do
   describe 'license' do
     let(:resource) do
       described_class.new(
-        :name    => resource_name,
-        :ensure  => 'present',
-        :content => {
+        name: resource_name,
+        ensure: 'present',
+        content: {
           'license' => {
             'uid'                   => 'cbff45e7-c553-41f7-ae4f-9205eabd80xx',
             'type'                  => 'trial',
@@ -49,7 +49,7 @@ describe Puppet::Type.type(:elasticsearch_license) do
 
       describe 'synced properties' do
         it 'only enforces defined content' do
-          expect(content.insync?(is_content)).to be_truthy
+          expect(content).to be_insync(is_content)
         end
       end
 
@@ -66,7 +66,7 @@ describe Puppet::Type.type(:elasticsearch_license) do
           end
 
           it "detection for #{field}" do
-            expect(content.insync?(changed_content)).to be_falsy
+            expect(content).not_to be_insync(changed_content)
           end
         end
       end

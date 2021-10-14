@@ -5,22 +5,22 @@ shared_examples 'datadir directory validation' do |es_config, datapaths|
   include_examples('manifest application')
 
   describe file('/etc/elasticsearch/elasticsearch.yml') do
-    it { should be_file }
+    it { is_expected.to be_file }
     datapaths.each do |datapath|
-      it { should contain datapath }
+      it { is_expected.to contain datapath }
     end
   end
 
   datapaths.each do |datapath|
     describe file(datapath) do
-      it { should be_directory }
+      it { is_expected.to be_directory }
     end
   end
 
   es_port = es_config['http.port']
   describe port(es_port) do
     it 'open', :with_retries do
-      should be_listening
+      is_expected.to be_listening
     end
   end
 
@@ -32,7 +32,7 @@ shared_examples 'datadir directory validation' do |es_config, datapaths|
         json = JSON.parse(response.body)['nodes'].values.first
         expect(
           json['settings']['path']['data']
-        ).to((datapaths.one? and v[:elasticsearch_major_version] <= 2) ? eq(datapaths.first) : contain_exactly(*datapaths))
+        ).to(datapaths.one? && v[:elasticsearch_major_version] <= 2 ? eq(datapaths.first) : contain_exactly(*datapaths))
       end
     end
   end
@@ -49,6 +49,7 @@ shared_examples 'datadir acceptance tests' do |es_config|
           restart_on_change => true,
         MANIFEST
       end
+
       include_examples('datadir directory validation',
                        es_config,
                        ['/var/lib/elasticsearch-data'])
@@ -64,6 +65,7 @@ shared_examples 'datadir acceptance tests' do |es_config|
           restart_on_change => true,
         MANIFEST
       end
+
       include_examples('datadir directory validation',
                        es_config,
                        ['/var/lib/elasticsearch-01', '/var/lib/elasticsearch-02'])

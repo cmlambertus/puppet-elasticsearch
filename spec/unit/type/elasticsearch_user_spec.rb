@@ -21,7 +21,7 @@ require 'spec_helper_rspec'
       end
 
       describe 'namevar validation' do
-        it 'should have :name as its namevar' do
+        it 'has :name as its namevar' do
           expect(described_class.key_attributes).to eq([:name])
         end
       end
@@ -29,31 +29,37 @@ require 'spec_helper_rspec'
 
     describe 'when validating values' do
       describe 'ensure' do
-        it 'should support present as a value for ensure' do
-          expect { described_class.new(
-            :name => resource_name,
-            :ensure => :present
-          ) }.to_not raise_error
+        it 'supports present as a value for ensure' do
+          expect do
+            described_class.new(
+              name: resource_name,
+              ensure: :present
+            )
+          end.not_to raise_error
         end
 
-        it 'should support absent as a value for ensure' do
-          expect { described_class.new(
-            :name => resource_name,
-            :ensure => :absent
-          ) }.to_not raise_error
+        it 'supports absent as a value for ensure' do
+          expect do
+            described_class.new(
+              name: resource_name,
+              ensure: :absent
+            )
+          end.not_to raise_error
         end
 
-        it 'should not support other values' do
-          expect { described_class.new(
-            :name => resource_name,
-            :ensure => :foo
-          ) }.to raise_error(Puppet::Error, /Invalid value/)
+        it 'does not support other values' do
+          expect do
+            described_class.new(
+              name: resource_name,
+              ensure: :foo
+            )
+          end.to raise_error(Puppet::Error, %r{Invalid value})
         end
       end
 
       {
-        :hashed_password => :property,
-        :password => :param
+        hashed_password: :property,
+        password: :param
       }.each_pair do |attribute, type|
         next unless described_class.respond_to? attribute
 
@@ -64,11 +70,13 @@ require 'spec_helper_rspec'
         end
 
         next unless attribute == :password
-        it 'should reject short passwords' do
-          expect { described_class.new(
-            :name => resource_name,
-            :password => 'foo'
-          ) }.to raise_error(Puppet::Error, /must be at least/)
+        it 'rejects short passwords' do
+          expect do
+            described_class.new(
+              name: resource_name,
+              password: 'foo'
+            )
+          end.to raise_error(Puppet::Error, %r{must be at least})
         end
       end
     end # of describing when validing values

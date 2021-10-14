@@ -15,7 +15,7 @@ Puppet::Type.newtype(:elasticsearch_template) do
 
   ensurable
 
-  newparam(:name, :namevar => true) do
+  newparam(:name, namevar: true) do
     desc 'Template name.'
   end
 
@@ -81,8 +81,8 @@ Puppet::Type.newtype(:elasticsearch_template) do
     # Ensure that at least one source of template content has been provided
     if self[:ensure] == :present
       fail Puppet::ParseError, '"content" or "source" required' \
-        if self[:content].nil? and self[:source].nil?
-      if !self[:content].nil? and !self[:source].nil?
+        if self[:content].nil? && self[:source].nil?
+      if !self[:content].nil? && !self[:source].nil?
         fail(
           Puppet::ParseError,
           "'content' and 'source' cannot be simultaneously defined"
@@ -98,10 +98,10 @@ Puppet::Type.newtype(:elasticsearch_template) do
       end
 
       tmp = if !catalog.nil? \
-                and catalog.respond_to?(:environment_instance)
+                && catalog.respond_to?(:environment_instance)
               Puppet::FileServing::Content.indirection.find(
                 self[:source],
-                :environment => catalog.environment_instance
+                environment: catalog.environment_instance
               )
             else
               Puppet::FileServing::Content.indirection.find(self[:source])

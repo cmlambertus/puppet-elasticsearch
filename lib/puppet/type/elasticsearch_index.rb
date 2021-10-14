@@ -12,7 +12,7 @@ Puppet::Type.newtype(:elasticsearch_index) do
 
   ensurable
 
-  newparam(:name, :namevar => true) do
+  newparam(:name, namevar: true) do
     desc 'Index name.'
   end
 

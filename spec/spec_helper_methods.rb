@@ -15,7 +15,7 @@ end
 require 'puppetlabs_spec_helper/module_spec_helper'
 
 RSpec.configure do |c|
-  c.add_setting :fixture_path, :default => fixture_path
+  c.add_setting :fixture_path, default: fixture_path
   # c.mock_with(:rspec)
   c.hiera_config = File.join(fixture_path, '/hiera/hiera.yaml')
 end

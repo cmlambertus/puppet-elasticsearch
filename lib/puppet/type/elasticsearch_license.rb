@@ -12,7 +12,7 @@ Puppet::Type.newtype(:elasticsearch_license) do
 
   ensurable
 
-  newparam(:name, :namevar => true) do
+  newparam(:name, namevar: true) do
     desc 'Pipeline name.'
   end
 

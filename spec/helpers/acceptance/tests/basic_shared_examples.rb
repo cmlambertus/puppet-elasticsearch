@@ -5,8 +5,10 @@ shared_examples 'basic acceptance tests' do |es_config|
   include_examples('manifest application')
 
   describe package("elasticsearch#{v[:oss] ? '-oss' : ''}") do
-    it { should be_installed
-      .with_version(v[:elasticsearch_full_version]) }
+    it {
+      is_expected.to be_installed.
+        with_version(v[:elasticsearch_full_version])
+    }
   end
 
   %w[
@@ -15,7 +17,7 @@ shared_examples 'basic acceptance tests' do |es_config|
     /var/lib/elasticsearch
   ].each do |dir|
     describe file(dir) do
-      it { should be_directory }
+      it { is_expected.to be_directory }
     end
   end
 
@@ -27,13 +29,13 @@ shared_examples 'basic acceptance tests' do |es_config|
 
     unless es_config.empty?
       describe file(pid_file) do
-        it { should be_file }
-        its(:content) { should match(/[0-9]+/) }
+        it { is_expected.to be_file }
+        its(:content) { is_expected.to match(%r{[0-9]+}) }
       end
 
       describe file('/etc/elasticsearch/elasticsearch.yml') do
-        it { should be_file }
-        it { should contain "name: #{es_config['node.name']}" }
+        it { is_expected.to be_file }
+        it { is_expected.to contain "name: #{es_config['node.name']}" }
       end
     end
 
@@ -41,7 +43,7 @@ shared_examples 'basic acceptance tests' do |es_config|
       es_port = es_config['http.port']
       describe port(es_port) do
         it 'open', :with_retries do
-          should be_listening
+          is_expected.to be_listening
         end
       end
 

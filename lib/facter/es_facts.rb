@@ -34,8 +34,6 @@ module EsFacts
   #
   # This is a super old function but works; disable a bunch of checks.
   # rubocop:disable Lint/HandleExceptions
-  # rubocop:disable Metrics/CyclomaticComplexity
-  # rubocop:disable Metrics/PerceivedComplexity
   def self.run
     dir_prefix = '/etc/elasticsearch'
     # httpports is a hash of port_number => ssl?
@@ -104,7 +102,7 @@ module EsFacts
           nodes_data['http']['bound_address'].each { |i| http_bound_addresses << i }
           nodes_data['transport']['bound_address'].each { |i| transport_bound_addresses << i }
           transport_publish_addresses << nodes_data['transport']['publish_address'] unless nodes_data['transport']['publish_address'].nil?
-          transportports << nodes_data['settings']['transport']['tcp']['port'] unless nodes_data['settings']['transport']['tcp'].nil? or nodes_data['settings']['transport']['tcp']['port'].nil?
+          transportports << nodes_data['settings']['transport']['tcp']['port'] unless nodes_data['settings']['transport']['tcp'].nil? || nodes_data['settings']['transport']['tcp']['port'].nil?
 
           node = {
             'http_ports'                  => httpports.keys,

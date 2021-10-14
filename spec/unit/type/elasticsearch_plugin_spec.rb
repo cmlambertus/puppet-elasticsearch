@@ -11,7 +11,7 @@ describe Puppet::Type.type(:elasticsearch_plugin) do
         end
       end
 
-      it 'should have an ensure property' do
+      it 'has an ensure property' do
         expect(described_class.attrtype(:ensure)).to eq(:property)
       end
     end

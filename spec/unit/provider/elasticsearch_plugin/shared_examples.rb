@@ -2,7 +2,7 @@ require 'spec_helper_rspec'
 
 shared_examples 'plugin provider' do |version|
   describe "elasticsearch #{version}" do
-    before(:each) do
+    before do
       allow(File).to receive(:open)
       allow(provider).to receive(:es_version).and_return version
     end
@@ -54,37 +54,37 @@ shared_examples 'plugin provider' do |version|
       describe 'proxying' do
         it 'installs behind a proxy' do
           resource[:proxy] = 'http://localhost:3128'
-          expect(provider)
-            .to receive(:plugin)
-            .with([
-              '-Dhttp.proxyHost=localhost',
-              '-Dhttp.proxyPort=3128',
-              '-Dhttps.proxyHost=localhost',
-              '-Dhttps.proxyPort=3128',
-              'install',
-              '--batch',
-              resource_name
-            ])
+          expect(provider).
+            to receive(:plugin).
+            with([
+                   '-Dhttp.proxyHost=localhost',
+                   '-Dhttp.proxyPort=3128',
+                   '-Dhttps.proxyHost=localhost',
+                   '-Dhttps.proxyPort=3128',
+                   'install',
+                   '--batch',
+                   resource_name
+                 ])
           provider.create
         end
 
         it 'uses authentication credentials' do
           resource[:proxy] = 'http://elastic:password@es.local:8080'
-          expect(provider)
-            .to receive(:plugin)
-            .with([
-              '-Dhttp.proxyHost=es.local',
-              '-Dhttp.proxyPort=8080',
-              '-Dhttp.proxyUser=elastic',
-              '-Dhttp.proxyPassword=password',
-              '-Dhttps.proxyHost=es.local',
-              '-Dhttps.proxyPort=8080',
-              '-Dhttps.proxyUser=elastic',
-              '-Dhttps.proxyPassword=password',
-              'install',
-              '--batch',
-              resource_name
-            ])
+          expect(provider).
+            to receive(:plugin).
+            with([
+                   '-Dhttp.proxyHost=es.local',
+                   '-Dhttp.proxyPort=8080',
+                   '-Dhttp.proxyUser=elastic',
+                   '-Dhttp.proxyPassword=password',
+                   '-Dhttps.proxyHost=es.local',
+                   '-Dhttps.proxyPort=8080',
+                   '-Dhttps.proxyUser=elastic',
+                   '-Dhttps.proxyPassword=password',
+                   'install',
+                   '--batch',
+                   resource_name
+                 ])
           provider.create
         end
       end

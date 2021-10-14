@@ -6,7 +6,7 @@ Puppet::Type.newtype(:elasticsearch_user) do
 
   ensurable
 
-  newparam(:name, :namevar => true) do
+  newparam(:name, namevar: true) do
     desc 'User name.'
   end
 
@@ -20,7 +20,7 @@ Puppet::Type.newtype(:elasticsearch_user) do
 
   newparam(
     :password,
-    :required_features => :manages_plaintext_passwords
+    required_features: :manages_plaintext_passwords
   ) do
     desc 'Plaintext password for user.'
 

@@ -17,7 +17,7 @@ describe Puppet::Type.type(:elasticsearch_user_roles) do
     end
 
     describe 'namevar validation' do
-      it 'should have :name as its namevar' do
+      it 'has :name as its namevar' do
         expect(described_class.key_attributes).to eq([:name])
       end
     end
@@ -25,25 +25,31 @@ describe Puppet::Type.type(:elasticsearch_user_roles) do
 
   describe 'when validating values' do
     describe 'ensure' do
-      it 'should support present as a value for ensure' do
-        expect { described_class.new(
-          :name => resource_name,
-          :ensure => :present
-        ) }.to_not raise_error
+      it 'supports present as a value for ensure' do
+        expect do
+          described_class.new(
+            name: resource_name,
+            ensure: :present
+          )
+        end.not_to raise_error
       end
 
-      it 'should support absent as a value for ensure' do
-        expect { described_class.new(
-          :name => resource_name,
-          :ensure => :absent
-        ) }.to_not raise_error
+      it 'supports absent as a value for ensure' do
+        expect do
+          described_class.new(
+            name: resource_name,
+            ensure: :absent
+          )
+        end.not_to raise_error
       end
 
-      it 'should not support other values' do
-        expect { described_class.new(
-          :name => resource_name,
-          :ensure => :foo
-        ) }.to raise_error(Puppet::Error, /Invalid value/)
+      it 'does not support other values' do
+        expect do
+          described_class.new(
+            name: resource_name,
+            ensure: :foo
+          )
+        end.to raise_error(Puppet::Error, %r{Invalid value})
       end
     end
   end # of describing when validing values

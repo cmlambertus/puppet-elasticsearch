@@ -4,7 +4,6 @@ require 'openssl'
 
 # Parent class encapsulating general-use functions for children REST-based
 # providers.
-# rubocop:disable Metrics/ClassLength
 class Puppet::Provider::ElasticREST < Puppet::Provider
   class << self
     attr_accessor :api_discovery_uri
@@ -33,8 +32,6 @@ class Puppet::Provider::ElasticREST < Puppet::Provider
   # Perform a REST API request against the indicated endpoint.
   #
   # @return Net::HTTPResponse
-  # rubocop:disable Metrics/CyclomaticComplexity
-  # rubocop:disable Metrics/PerceivedComplexity
   def self.rest(http, \
                 req, \
                 validate_tls = true, \
@@ -42,9 +39,9 @@ class Puppet::Provider::ElasticREST < Puppet::Provider
                 username = nil, \
                 password = nil)
 
-    if username and password
+    if username && password
       req.basic_auth username, password
-    elsif username or password
+    elsif username || password
       Puppet.warning(
         'username and password must both be defined, skipping basic auth'
       )
@@ -73,8 +70,8 @@ class Puppet::Provider::ElasticREST < Puppet::Provider
   # Helper to format a remote URL request for Elasticsearch which takes into
   # account path ordering, et cetera.
   def self.format_uri(resource_path, property_flush = {})
-    return api_uri if resource_path.nil? or api_resource_style == :bare
-    if discrete_resource_creation and not property_flush[:ensure].nil?
+    return api_uri if resource_path.nil? || api_resource_style == :bare
+    if discrete_resource_creation && !property_flush[:ensure].nil?
       resource_path
     else
       case api_resource_style
@@ -108,14 +105,14 @@ class Puppet::Provider::ElasticREST < Puppet::Provider
 
     http.use_ssl = uri.scheme == 'https'
     [[ca_file, :ca_file=], [ca_path, :ca_path=]].each do |arg, method|
-      http.send method, arg if arg and http.respond_to? method
+      http.send method, arg if arg && http.respond_to?(method)
     end
 
     response = rest http, req, validate_tls, timeout, username, password
 
     results = []
 
-    if response.respond_to? :code and response.code.to_i == 200
+    if response.respond_to?(:code) && response.code.to_i == 200
       results = process_body(response.body)
     end
 
@@ -139,7 +136,7 @@ class Puppet::Provider::ElasticREST < Puppet::Provider
   # Passes API objects through arbitrary Procs/lambdas in order to postprocess
   # API responses.
   def self.process_metadata(raw_metadata)
-    if metadata_pipeline.is_a? Array and !metadata_pipeline.empty?
+    if metadata_pipeline.is_a?(Array) && !metadata_pipeline.empty?
       metadata_pipeline.reduce(raw_metadata) do |md, processor|
         processor.call md
       end
@@ -192,7 +189,7 @@ class Puppet::Provider::ElasticREST < Puppet::Provider
   # Generate a request body
   def generate_body
     JSON.generate(
-      if metadata != :content and @property_flush[:ensure] == :present
+      if metadata != :content && @property_flush[:ensure] == :present
         { metadata.to_s => resource[metadata] }
       else
         resource[metadata]
@@ -202,8 +199,6 @@ class Puppet::Provider::ElasticREST < Puppet::Provider
 
   # Call Elasticsearch's REST API to appropriately PUT/DELETE/or otherwise
   # update any managed API objects.
-  # rubocop:disable Metrics/CyclomaticComplexity
-  # rubocop:disable Metrics/PerceivedComplexity
   def flush
     Puppet.debug('Got to flush')
     uri = URI(
@@ -234,7 +229,7 @@ class Puppet::Provider::ElasticREST < Puppet::Provider
     http = Net::HTTP.new uri.host, uri.port
     http.use_ssl = uri.scheme == 'https'
     [:ca_file, :ca_path].each do |arg|
-      if !resource[arg].nil? and http.respond_to? arg
+      if !resource[arg].nil? && http.respond_to?(arg)
         http.send "#{arg}=".to_sym, resource[arg]
       end
     end
@@ -254,8 +249,8 @@ class Puppet::Provider::ElasticREST < Puppet::Provider
       json = JSON.parse(response.body)
 
       err_msg = if json.key? 'error'
-                  if json['error'].is_a? Hash \
-                      and json['error'].key? 'root_cause'
+                  if json['error'].is_a?(Hash) \
+                      && json['error'].key?('root_cause')
                     # Newer versions have useful output
                     json['error']['root_cause'].first['reason']
                   else
@@ -282,7 +277,7 @@ class Puppet::Provider::ElasticREST < Puppet::Provider
       resource[:password],
       resource[:ca_file],
       resource[:ca_path]
-    ).detect do |t|
+    ).find do |t|
       t[:name] == resource[:name]
     end
   end

@@ -1,7 +1,7 @@
 require 'openssl'
 
 def gen_certs(num_certs, path)
-  ret = { :clients => [] }
+  ret = { clients: [] }
   serial = 1_000_000
   ca_key = OpenSSL::PKey::RSA.new 2048
 
@@ -30,9 +30,9 @@ def gen_certs(num_certs, path)
   )
   ca_cert.sign ca_key, OpenSSL::Digest::SHA256.new
   ret[:ca] = {
-    :cert => {
-      :pem => ca_cert.to_pem,
-      :path => path + '/ca_cert.pem'
+    cert: {
+      pem: ca_cert.to_pem,
+      path: path + '/ca_cert.pem'
     }
   }
 
@@ -40,13 +40,13 @@ def gen_certs(num_certs, path)
     key, cert, serial = gen_cert_pair serial, ca_cert
     cert.sign ca_key, OpenSSL::Digest::SHA256.new
     ret[:clients] << {
-      :key => {
-        :pem => key.to_pem,
-        :path => path + '/' + i.to_s + '_key.pem'
+      key: {
+        pem: key.to_pem,
+        path: path + '/' + i.to_s + '_key.pem'
       },
-      :cert => {
-        :pem => cert.to_pem,
-        :path => path + '/' + i.to_s + '_cert.pem'
+      cert: {
+        pem: cert.to_pem,
+        path: path + '/' + i.to_s + '_cert.pem'
       }
     }
   end

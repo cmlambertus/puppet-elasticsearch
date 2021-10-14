@@ -20,9 +20,9 @@ describe "elasticsearch v#{v[:elasticsearch_full_version]} class" do
     'node.name'      => 'elasticsearch01'
   }
 
-  let(:elastic_repo) { not v[:is_snapshot] }
+  let(:elastic_repo) { !v[:is_snapshot] }
   let(:manifest) do
-    package = if not v[:is_snapshot]
+    package = if !v[:is_snapshot]
                 <<-MANIFEST
                   # Hard version set here due to plugin incompatibilities.
                   version => '#{v[:elasticsearch_full_version]}',
@@ -60,11 +60,13 @@ describe "elasticsearch v#{v[:elasticsearch_full_version]} class" do
 
   include_examples('pipeline operations', es_config, v[:pipeline])
 
-  include_examples(
-    'plugin acceptance tests',
-    es_config,
-    v[:elasticsearch_plugins]
-  ) unless v[:elasticsearch_plugins].empty?
+  unless v[:elasticsearch_plugins].empty?
+    include_examples(
+      'plugin acceptance tests',
+      es_config,
+      v[:elasticsearch_plugins]
+    )
+  end
 
   include_examples('snapshot repository acceptance tests')
 
@@ -79,5 +81,5 @@ describe "elasticsearch v#{v[:elasticsearch_full_version]} class" do
   #
   # Skip OSS-only distributions since they do not bundle x-pack, and skip
   # snapshots since we they don't recognize prod licenses.
-  include_examples('security acceptance tests', es_config) unless v[:oss] or v[:is_snapshot]
+  include_examples('security acceptance tests', es_config) unless v[:oss] || v[:is_snapshot]
 end

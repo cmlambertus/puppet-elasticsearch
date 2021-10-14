@@ -37,18 +37,18 @@ shared_examples 'template content' do |es_config, template|
   elasticsearch_port = es_config['http.port']
   describe port(elasticsearch_port) do
     it 'open', :with_retries do
-      should be_listening
+      is_expected.to be_listening
     end
   end
 
   describe server :container do
     describe http(
       "http://localhost:#{elasticsearch_port}/_template",
-      :params => { 'flat_settings' => 'false' }
+      params: { 'flat_settings' => 'false' }
     ) do
       it 'returns the installed template', :with_retries do
-        expect(JSON.parse(response.body).values)
-          .to include(include(template))
+        expect(JSON.parse(response.body).values).
+          to include(include(template))
       end
     end
   end

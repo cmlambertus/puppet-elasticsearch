@@ -18,8 +18,8 @@ describe Puppet::Provider::ElasticYaml do
 
   let :unsorted_hash do
     [{
-      :name => 'role',
-      :metadata => {
+      name: 'role',
+      metadata: {
         'zeta' => {
           'zeta'  => 5,
           'gamma' => 4,

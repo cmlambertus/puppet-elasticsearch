@@ -3,18 +3,24 @@ require 'spec_helper'
 describe 'plugin_dir' do
   describe 'exception handling' do
     describe 'with no arguments' do
-      it { is_expected.to run.with_params
-        .and_raise_error(Puppet::ParseError) }
+      it {
+        is_expected.to run.with_params.
+          and_raise_error(Puppet::ParseError)
+      }
     end
 
     describe 'more than two arguments' do
-      it { is_expected.to run.with_params('a', 'b', 'c')
-        .and_raise_error(Puppet::ParseError) }
+      it {
+        is_expected.to run.with_params('a', 'b', 'c').
+          and_raise_error(Puppet::ParseError)
+      }
     end
 
     describe 'non-string arguments' do
-      it { is_expected.to run.with_params([])
-        .and_raise_error(Puppet::ParseError) }
+      it {
+        is_expected.to run.with_params([]).
+          and_raise_error(Puppet::ParseError)
+      }
     end
   end
 

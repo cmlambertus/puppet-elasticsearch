@@ -6,7 +6,6 @@ require 'puppet_x/elastic/plugin_parsing'
 
 # Generalized parent class for providers that behave like Elasticsearch's plugin
 # command line tool.
-# rubocop:disable Metrics/ClassLength
 class Puppet::Provider::ElasticPlugin < Puppet::Provider
   # Elasticsearch's home directory.
   #
@@ -42,15 +41,15 @@ class Puppet::Provider::ElasticPlugin < Puppet::Provider
       # indicates which version of x-pack this is.
       properties = properties_files.sort.map do |prop_file|
         IO.readlines(prop_file).map(&:strip).reject do |line|
-          line.start_with?('#') or line.empty?
+          line.start_with?('#') || line.empty?
         end.map do |property|
           property.split('=')
-        end.reject do |pairs|
-          pairs.length != 2
+        end.select do |pairs|
+          pairs.length == 2
         end.to_h
       end.find { |prop| prop.key? 'version' }
 
-      if properties and properties['version'] != plugin_version
+      if properties && properties['version'] != plugin_version
         debug "Elasticsearch plugin #{@resource[:name]} not version #{plugin_version}, reinstalling"
         destroy
         return false
@@ -137,7 +136,7 @@ class Puppet::Provider::ElasticPlugin < Puppet::Provider
     saved_vars = {}
 
     # Use 'java_home' param if supplied, otherwise default to Elasticsearch shipped JDK
-    env_vars['JAVA_HOME'] = if @resource[:java_home].nil? or @resource[:java_home] == ''
+    env_vars['JAVA_HOME'] = if @resource[:java_home].nil? || @resource[:java_home] == ''
                               "#{homedir}/jdk"
                             else
                               @resource[:java_home]

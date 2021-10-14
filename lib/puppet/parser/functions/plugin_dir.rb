@@ -2,8 +2,8 @@
 module Puppet::Parser::Functions
   newfunction(
     :plugin_dir,
-    :type => :rvalue,
-    :doc => <<-EOS
+    type: :rvalue,
+    doc: <<-EOS
     Extracts the end plugin directory of the name
 
     @return String

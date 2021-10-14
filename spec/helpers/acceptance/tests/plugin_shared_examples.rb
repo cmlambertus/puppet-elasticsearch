@@ -35,7 +35,7 @@ shared_examples 'plugin acceptance tests' do |es_config, plugins|
             include_examples('manifest application', es_config)
 
             describe file("/usr/share/elasticsearch/plugins/#{plugin}/") do
-              it { should be_directory }
+              it { is_expected.to be_directory }
             end
 
             include_examples(

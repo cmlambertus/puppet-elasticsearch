@@ -19,7 +19,7 @@ end
 shared_examples 'hiera acceptance tests' do |es_config, plugins|
   describe 'hiera', :then_purge do
     let(:manifest) do
-      package = if not v[:is_snapshot]
+      package = if !v[:is_snapshot]
                   <<-MANIFEST
                     # Hard version set here due to plugin incompatibilities.
                     version => '#{v[:elasticsearch_full_version]}',
@@ -81,7 +81,7 @@ shared_examples 'hiera acceptance tests' do |es_config, plugins|
       cleanup_manifest = <<-EOS
         class { 'elasticsearch': ensure => 'absent', oss => #{v[:oss]} }
       EOS
-      apply_manifest(cleanup_manifest, :debug => v[:puppet_debug])
+      apply_manifest(cleanup_manifest, debug: v[:puppet_debug])
     end
   end
 end

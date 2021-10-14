@@ -10,8 +10,8 @@ describe 'elasticsearch::user' do
   end
 
   on_supported_os(
-    :hardwaremodels => ['x86_64'],
-    :supported_os => [
+    hardwaremodels: ['x86_64'],
+    supported_os: [
       {
         'operatingsystem' => 'CentOS',
         'operatingsystemrelease' => ['7']
@@ -19,23 +19,25 @@ describe 'elasticsearch::user' do
     ]
   ).each do |os, facts|
     context "on #{os}" do
-      let(:facts) { facts.merge(
-        :scenario => '',
-        :common => ''
-      ) }
+      let(:facts) do
+        facts.merge(
+          scenario: '',
+          common: ''
+        )
+      end
 
       context 'with default parameters' do
         let(:params) do
           {
-            :password => 'foobar',
-            :roles => %w[monitor user]
+            password: 'foobar',
+            roles: %w[monitor user]
           }
         end
 
-        it { should contain_elasticsearch__user('elastic') }
-        it { should contain_elasticsearch_user('elastic') }
+        it { is_expected.to contain_elasticsearch__user('elastic') }
+        it { is_expected.to contain_elasticsearch_user('elastic') }
         it do
-          should contain_elasticsearch_user_roles('elastic').with(
+          is_expected.to contain_elasticsearch_user_roles('elastic').with(
             'ensure' => 'present',
             'roles'  => %w[monitor user]
           )
@@ -61,20 +63,22 @@ describe 'elasticsearch::user' do
 
           let(:params) do
             {
-              :password => 'foobar',
-              :roles => %w[monitor user]
+              password: 'foobar',
+              roles: %w[monitor user]
             }
           end
 
-          it { should contain_elasticsearch__role('test_role') }
-          it { should contain_elasticsearch_role('test_role') }
-          it { should contain_elasticsearch_role_mapping('test_role') }
-          it { should contain_elasticsearch__user('elastic')
-            .that_comes_before([
-            'Elasticsearch::Template[foo]'
-          ]).that_requires([
-            'Elasticsearch::Role[test_role]'
-          ])}
+          it { is_expected.to contain_elasticsearch__role('test_role') }
+          it { is_expected.to contain_elasticsearch_role('test_role') }
+          it { is_expected.to contain_elasticsearch_role_mapping('test_role') }
+          it {
+            is_expected.to contain_elasticsearch__user('elastic').
+              that_comes_before([
+                                  'Elasticsearch::Template[foo]'
+                                ]).that_requires([
+                                                   'Elasticsearch::Role[test_role]'
+                                                 ])
+          }
 
           include_examples 'class', :systemd
         end
@@ -97,20 +101,22 @@ describe 'elasticsearch::user' do
 
           let(:params) do
             {
-              :password => 'foobar',
-              :roles => %w[monitor user]
+              password: 'foobar',
+              roles: %w[monitor user]
             }
           end
 
-          it { should contain_elasticsearch__role('test_role') }
-          it { should contain_elasticsearch_role('test_role') }
-          it { should contain_elasticsearch_role_mapping('test_role') }
-          it { should contain_elasticsearch__user('elastic')
-            .that_comes_before([
-              'Elasticsearch::Template[foo]'
-          ]).that_requires([
-            'Elasticsearch::Role[test_role]'
-          ])}
+          it { is_expected.to contain_elasticsearch__role('test_role') }
+          it { is_expected.to contain_elasticsearch_role('test_role') }
+          it { is_expected.to contain_elasticsearch_role_mapping('test_role') }
+          it {
+            is_expected.to contain_elasticsearch__user('elastic').
+              that_comes_before([
+                                  'Elasticsearch::Template[foo]'
+                                ]).that_requires([
+                                                   'Elasticsearch::Role[test_role]'
+                                                 ])
+          }
 
           include_examples 'class', :systemd
         end

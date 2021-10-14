@@ -7,7 +7,7 @@ Puppet::Type.newtype(:elasticsearch_user_file) do
 
   ensurable
 
-  newparam(:name, :namevar => true) do
+  newparam(:name, namevar: true) do
     desc 'User name.'
   end
 
@@ -21,10 +21,10 @@ Puppet::Type.newtype(:elasticsearch_user_file) do
 
   newproperty(
     :hashed_password,
-    :required_features => :manages_encrypted_passwords
+    required_features: :manages_encrypted_passwords
   ) do
     desc 'Hashed password for user.'
 
-    newvalues(/^[$]2a[$].{56}$/)
+    newvalues(%r{^[$]2a[$].{56}$})
   end
 end

@@ -5,10 +5,10 @@ describe Puppet::Type.type(:elasticsearch_license).provider(:xpack) do
 
   let(:example_1) do
     {
-      :name     => 'xpack',
-      :ensure   => :present,
-      :provider => :xpack,
-      :content  => {
+      name: 'xpack',
+      ensure: :present,
+      provider: :xpack,
+      content: {
         'license' => {
           'status'                => 'active',
           'uid'                   => 'cbff45e7-c553-41f7-ae4f-9205eabd80xx',
@@ -48,8 +48,8 @@ describe Puppet::Type.type(:elasticsearch_license).provider(:xpack) do
   let(:provider) { described_class.new resource }
   let(:props) do
     {
-      :name     => name,
-      :settings => {
+      name: name,
+      settings: {
         'index' => {
           'number_of_replicas' => 0
         }

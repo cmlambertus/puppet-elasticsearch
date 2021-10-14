@@ -3,10 +3,10 @@ require_relative '../../../helpers/unit/provider/elasticsearch_rest_shared_examp
 describe Puppet::Type.type(:elasticsearch_template).provider(:ruby) do
   let(:example_1) do
     {
-      :name => 'foobar1',
-      :ensure => :present,
-      :provider => :ruby,
-      :content => {
+      name: 'foobar1',
+      ensure: :present,
+      provider: :ruby,
+      content: {
         'aliases' => {},
         'mappings' => {},
         'settings' => {},
@@ -30,10 +30,10 @@ describe Puppet::Type.type(:elasticsearch_template).provider(:ruby) do
 
   let(:example_2) do
     {
-      :name => 'foobar2',
-      :ensure => :present,
-      :provider => :ruby,
-      :content => {
+      name: 'foobar2',
+      ensure: :present,
+      provider: :ruby,
+      content: {
         'aliases' => {},
         'mappings' => {},
         'settings' => {},
@@ -68,8 +68,8 @@ describe Puppet::Type.type(:elasticsearch_template).provider(:ruby) do
   let(:provider) { described_class.new resource }
   let(:props) do
     {
-      :name => 'foo',
-      :content => {
+      name: 'foo',
+      content: {
         'template' => 'fooindex-*'
       }
     }

@@ -8,7 +8,7 @@ module Puppet_X
     end
 
     def self.plugin_version(raw_name)
-      v = plugin_split(raw_name, 2, false).gsub(/^[^0-9]*/, '')
+      v = plugin_split(raw_name, 2, false).gsub(%r{^[^0-9]*}, '')
       raise ElasticPluginParseFailure, "could not parse version, got '#{v}'" if v.empty?
       v
     end
@@ -19,13 +19,15 @@ module Puppet_X
       %w[/ :].each do |delimiter|
         parts = original_string.split(delimiter)
         # If the string successfully split, assume we found the right format
-        return parts[position].gsub(/(elasticsearch-|es-)/, '') unless parts[position].nil?
+        return parts[position].gsub(%r{(elasticsearch-|es-)}, '') unless parts[position].nil?
       end
 
-      raise(
-        ElasticPluginParseFailure,
-        "could not find element '#{position}' in #{original_string}"
-      ) unless soft_fail
+      unless soft_fail
+        raise(
+          ElasticPluginParseFailure,
+          "could not find element '#{position}' in #{original_string}"
+        )
+      end
 
       original_string
     end

@@ -38,7 +38,7 @@ shared_examples 'security plugin manifest' do |credentials|
 
   include_examples(
     'manifest application',
-    not(credentials.values.map { |p| p[:changed] }.any?)
+    credentials.values.map { |p| p[:changed] }.none?)
   )
 end
 
@@ -46,7 +46,7 @@ shared_examples 'secured request' do |test_desc, es_config, path, http_test, exp
   es_port = es_config['http.port']
   describe port(es_port) do
     it 'open', :with_retries do
-      should be_listening
+      is_expected.to be_listening
     end
   end
 
@@ -54,8 +54,8 @@ shared_examples 'secured request' do |test_desc, es_config, path, http_test, exp
     describe http(
       "https://localhost:#{es_port}#{path}",
       {
-        :ssl => { :verify => false }
-      }.merge((user and pass) ? { :basic_auth => [user, pass] } : {})
+        ssl: { verify: false }
+      }.merge(user && pass ? { basic_auth: [user, pass] } : {})
     ) do
       it test_desc, :with_retries do
         expect(http_test.call(response)).to eq(expected)
@@ -65,12 +65,12 @@ shared_examples 'secured request' do |test_desc, es_config, path, http_test, exp
 end
 
 shared_examples 'security acceptance tests' do |es_config|
-  describe 'security plugin operations', :if => vault_available?, :then_purge => true, :with_license => true, :with_certificates => true do
-    rand_string = lambda { [*('a'..'z')].sample(8).join }
+  describe 'security plugin operations', if: vault_available?, then_purge: true, with_license: true, with_certificates: true do
+    rand_string = -> { [*('a'..'z')].sample(8).join }
 
     admin_user = rand_string.call
     admin_password = rand_string.call
-    admin = { admin_user => { :plaintext => admin_password, :roles => [{ 'superuser' => [] }] } }
+    admin = { admin_user => { plaintext: admin_password, roles: [{ 'superuser' => [] }] } }
 
     let(:manifest_class_parameters) do
       <<-MANIFEST
@@ -97,8 +97,8 @@ shared_examples 'security acceptance tests' do |es_config|
 
       describe 'user authentication' do
         username_passwords = {
-          user_one => { :plaintext => user_one_pw, :roles => [{ 'superuser' => [] }] },
-          user_two => { :plaintext => user_two_pw, :roles => [{ 'superuser' => [] }] }
+          user_one => { plaintext: user_one_pw, roles: [{ 'superuser' => [] }] },
+          user_two => { plaintext: user_two_pw, roles: [{ 'superuser' => [] }] }
         }.merge(admin)
         username_passwords[user_two][:hash] = bcrypt(username_passwords[user_two][:plaintext])
 
@@ -106,18 +106,18 @@ shared_examples 'security acceptance tests' do |es_config|
         include_examples(
           'secured request', 'denies unauthorized access',
           es_config, '/_cluster/health',
-          lambda { |r| r.status }, 401
+          ->(r) { r.status }, 401
         )
         include_examples(
           'secured request', "permits user #{user_one} access",
           es_config, '/_cluster/health',
-          lambda { |r| r.status }, 200,
+          ->(r) { r.status }, 200,
           user_one, user_one_pw
         )
         include_examples(
           'secured request', "permits user #{user_two} access",
           es_config, '/_cluster/health',
-          lambda { |r| r.status }, 200,
+          ->(r) { r.status }, 200,
           user_two, user_two_pw
         )
       end
@@ -126,21 +126,21 @@ shared_examples 'security acceptance tests' do |es_config|
         new_password = rand_string.call
         username_passwords = {
           user_one => {
-            :plaintext => new_password,
-            :changed   => true,
-            :roles     => [{ 'superuser' => [] }]
+            plaintext: new_password,
+            changed: true,
+            roles: [{ 'superuser' => [] }]
           }
         }
 
         include_examples('security plugin manifest', username_passwords)
         include_examples(
           'secured request', 'denies unauthorized access', es_config, '/_cluster/health',
-          lambda { |r| r.status }, 401
+          ->(r) { r.status }, 401
         )
         include_examples(
           'secured request', "permits user #{user_two} access with new password",
           es_config, '/_cluster/health',
-          lambda { |r| r.status }, 200,
+          ->(r) { r.status }, 200,
           user_one, new_password
         )
       end
@@ -150,8 +150,8 @@ shared_examples 'security acceptance tests' do |es_config|
         username = rand_string.call
         user = {
           username => {
-            :plaintext => password,
-            :roles => [{
+            plaintext: password,
+            roles: [{
               rand_string.call => {
                 'cluster' => [
                   'cluster:monitor/health'
@@ -165,13 +165,13 @@ shared_examples 'security acceptance tests' do |es_config|
         include_examples(
           'secured request', 'denies unauthorized access',
           es_config, '/_snapshot',
-          lambda { |r| r.status }, 403,
+          ->(r) { r.status }, 403,
           username, password
         )
         include_examples(
           'secured request', 'permits authorized access',
           es_config, '/_cluster/health',
-          lambda { |r| r.status }, 200,
+          ->(r) { r.status }, 200,
           username, password
         )
       end

@@ -2,8 +2,8 @@
 module Puppet::Parser::Functions
   newfunction(
     :array_suffix,
-    :type => :rvalue,
-    :doc => <<-EOS
+    type: :rvalue,
+    doc: <<-EOS
 This function applies a suffix to all elements in an array.
 
 *Examples:*
@@ -16,8 +16,10 @@ Will return: ['ap','bp','cp']
     EOS
   ) do |arguments|
     # Technically we support two arguments but only first is mandatory ...
-    raise(Puppet::ParseError, 'array_suffix(): Wrong number of arguments ' \
-      "given (#{arguments.size} for 1)") if arguments.empty?
+    if arguments.empty?
+      raise(Puppet::ParseError, 'array_suffix(): Wrong number of arguments ' \
+        "given (#{arguments.size} for 1)")
+    end
 
     array = arguments[0]
 
@@ -34,7 +36,7 @@ Will return: ['ap','bp','cp']
     end
 
     # Turn everything into string same as join would do ...
-    result = array.collect do |i|
+    result = array.map do |i|
       i = i.to_s
       suffix ? i + suffix : i
     end

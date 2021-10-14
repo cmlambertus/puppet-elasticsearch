@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe 'elasticsearch::license', :type => 'class' do
+describe 'elasticsearch::license', type: 'class' do
   # First, randomly select one of our supported OSes to run tests that apply
   # to any distro
   on_supported_os.to_a.sample(1).to_h.each do |os, facts|
@@ -12,7 +12,7 @@ describe 'elasticsearch::license', :type => 'class' do
       context 'when managing x-pack license' do
         let(:params) do
           {
-            :content => {
+            content: {
               'license' => {
                 'uid'                   => 'cbff45e7-c553-41f7-ae4f-9205eabd80xx',
                 'type'                  => 'trial',
@@ -45,17 +45,17 @@ describe 'elasticsearch::license', :type => 'class' do
         end
 
         it do
-          should contain_class('elasticsearch::license')
+          is_expected.to contain_class('elasticsearch::license')
         end
         it do
-          should contain_es_instance_conn_validator(
+          is_expected.to contain_es_instance_conn_validator(
             'license-conn-validator'
           ).that_comes_before('elasticsearch_license[xpack]')
         end
         it do
-          should contain_elasticsearch_license('xpack').with(
-            :ensure  => 'present',
-            :content => {
+          is_expected.to contain_elasticsearch_license('xpack').with(
+            ensure: 'present',
+            content: {
               'license' => {
                 'uid'                   => 'cbff45e7-c553-41f7-ae4f-9205eabd80xx',
                 'type'                  => 'trial',
@@ -68,15 +68,15 @@ describe 'elasticsearch::license', :type => 'class' do
                 'start_date_in_millis'  => 1_513_814_400_000
               }
             },
-            :protocol     => 'https',
-            :host         => '127.0.0.1',
-            :port         => 9201,
-            :timeout      => 11,
-            :username     => 'elastic',
-            :password     => 'password',
-            :ca_file      => '/foo/bar.pem',
-            :ca_path      => '/foo/',
-            :validate_tls => false
+            protocol: 'https',
+            host: '127.0.0.1',
+            port: 9201,
+            timeout: 11,
+            username: 'elastic',
+            password: 'password',
+            ca_file: '/foo/bar.pem',
+            ca_path: '/foo/',
+            validate_tls: false
           )
         end
       end

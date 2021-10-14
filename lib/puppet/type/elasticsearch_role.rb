@@ -3,10 +3,10 @@ Puppet::Type.newtype(:elasticsearch_role) do
 
   ensurable
 
-  newparam(:name, :namevar => true) do
+  newparam(:name, namevar: true) do
     desc 'Role name.'
 
-    newvalues(/^[a-zA-Z_]{1}[-\w@.$]{0,29}$/)
+    newvalues(%r{^[a-zA-Z_]{1}[-\w@.$]{0,29}$})
   end
 
   newproperty(:privileges) do

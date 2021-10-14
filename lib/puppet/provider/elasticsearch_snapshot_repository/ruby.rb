@@ -4,8 +4,8 @@ require 'puppet/provider/elastic_rest'
 
 Puppet::Type.type(:elasticsearch_snapshot_repository).provide(
   :ruby,
-  :parent => Puppet::Provider::ElasticREST,
-  :api_uri => '_snapshot'
+  parent: Puppet::Provider::ElasticREST,
+  api_uri: '_snapshot'
 ) do
   desc 'A REST API based provider to manage Elasticsearch snapshot repositories.'
 
@@ -16,15 +16,15 @@ Puppet::Type.type(:elasticsearch_snapshot_repository).provide(
 
     results = JSON.parse(body).map do |object_name, api_object|
       {
-        :name              => object_name,
-        :ensure            => :present,
-        :type              => api_object['type'],
-        :compress          => api_object['settings']['compress'],
-        :location          => api_object['settings']['location'],
-        :chunk_size        => api_object['settings']['chunk_size'],
-        :max_restore_rate  => api_object['settings']['max_restore_rate'],
-        :max_snapshot_rate => api_object['settings']['max_snapshot_rate'],
-        :provider          => name
+        name: object_name,
+        ensure: :present,
+        type: api_object['type'],
+        compress: api_object['settings']['compress'],
+        location: api_object['settings']['location'],
+        chunk_size: api_object['settings']['chunk_size'],
+        max_restore_rate: api_object['settings']['max_restore_rate'],
+        max_snapshot_rate: api_object['settings']['max_snapshot_rate'],
+        provider: name
       }.reject { |_k, v| v.nil? }
     end
     results

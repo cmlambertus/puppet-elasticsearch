@@ -2,8 +2,6 @@ require 'puppet/parameter/boolean'
 
 # Provides common properties and parameters for REST-based Elasticsearch types
 module ElasticsearchRESTResource
-  # rubocop:disable Metrics/CyclomaticComplexity
-  # rubocop:disable Metrics/PerceivedComplexity
   def self.extended(extender)
     extender.newparam(:ca_file) do
       desc 'Absolute path to a CA file to authenticate server certs against.'
@@ -44,10 +42,10 @@ module ElasticsearchRESTResource
 
       validate do |value|
         raise Puppet::Error, "invalid port value '#{value}'" \
-          unless value.to_s =~ /^([0-9]+)$/
+          unless value.to_s =~ %r{^([0-9]+)$}
         raise Puppet::Error, "invalid port value '#{value}'" \
-          unless (0 < Regexp.last_match[0].to_i) \
-            and (Regexp.last_match[0].to_i < 65_535)
+          unless (Regexp.last_match[0].to_i > 0) \
+            && (Regexp.last_match[0].to_i < 65_535)
       end
     end
 
@@ -71,7 +69,7 @@ module ElasticsearchRESTResource
       end
 
       validate do |value|
-        if value.to_s !~ /^\d+$/
+        if value.to_s !~ %r{^\d+$}
           raise Puppet::Error, 'timeout must be a positive integer'
         end
       end
@@ -83,8 +81,8 @@ module ElasticsearchRESTResource
 
     extender.newparam(
       :validate_tls,
-      :boolean => true,
-      :parent => Puppet::Parameter::Boolean
+      boolean: true,
+      parent: Puppet::Parameter::Boolean
     ) do
       desc 'Whether to verify TLS/SSL certificates.'
       defaultto true

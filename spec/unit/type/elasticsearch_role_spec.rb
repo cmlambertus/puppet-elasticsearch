@@ -19,45 +19,55 @@ describe Puppet::Type.type(:elasticsearch_role) do
 
   describe 'when validating values' do
     describe 'ensure' do
-      it 'should support present as a value for ensure' do
-        expect { described_class.new(
-          :name => resource_name,
-          :ensure => :present
-        ) }.to_not raise_error
+      it 'supports present as a value for ensure' do
+        expect do
+          described_class.new(
+            name: resource_name,
+            ensure: :present
+          )
+        end.not_to raise_error
       end
 
-      it 'should support absent as a value for ensure' do
-        expect { described_class.new(
-          :name => resource_name,
-          :ensure => :absent
-        ) }.to_not raise_error
+      it 'supports absent as a value for ensure' do
+        expect do
+          described_class.new(
+            name: resource_name,
+            ensure: :absent
+          )
+        end.not_to raise_error
       end
 
-      it 'should not support other values' do
-        expect { described_class.new(
-          :name => resource_name,
-          :ensure => :foo
-        ) }.to raise_error(Puppet::Error, /Invalid value/)
+      it 'does not support other values' do
+        expect do
+          described_class.new(
+            name: resource_name,
+            ensure: :foo
+          )
+        end.to raise_error(Puppet::Error, %r{Invalid value})
       end
     end
 
     describe 'name' do
-      it 'should reject long role names' do
-        expect { described_class.new(
-          :name => 'a' * 31
-        ) }.to raise_error(
+      it 'rejects long role names' do
+        expect do
+          described_class.new(
+            name: 'a' * 31
+          )
+        end.to raise_error(
           Puppet::ResourceError,
-          /valid values/i
+          %r{valid values}i
         )
       end
 
-      it 'should reject invalid role characters' do
+      it 'rejects invalid role characters' do
         ['@foobar', '0foobar'].each do |role|
-          expect { described_class.new(
-            :name => role
-          ) }.to raise_error(
+          expect do
+            described_class.new(
+              name: role
+            )
+          end.to raise_error(
             Puppet::ResourceError,
-            /valid values/i
+            %r{valid values}i
           )
         end
       end

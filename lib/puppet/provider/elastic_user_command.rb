@@ -18,11 +18,11 @@ class Puppet::Provider::ElasticUserCommand < Puppet::Provider
   # Run the user management command with specified tool arguments.
   def self.command_with_path(args, configdir = nil)
     options = {
-      :combine            => true,
-      :custom_environment => {
+      combine: true,
+      custom_environment: {
         'ES_PATH_CONF' => configdir || '/etc/elasticsearch'
       },
-      :failonfail => true
+      failonfail: true
     }
 
     execute(
@@ -41,17 +41,17 @@ class Puppet::Provider::ElasticUserCommand < Puppet::Provider
     end
 
     debug("Raw command output: #{output}")
-    output.split("\n").select { |u|
+    output.split("\n").select do |u|
       # Keep only expected "user : role1,role2" formatted lines
-      u[/^[^:]+:\s+\S+$/]
-    }.map { |u|
+      u[%r{^[^:]+:\s+\S+$}]
+    end.map do |u|
       # Break into ["user ", " role1,role2"]
       u.split(':').first.strip
-    }.map do |user|
+    end.map do |user|
       {
-        :name => user,
-        :ensure => :present,
-        :provider => name
+        name: user,
+        ensure: :present,
+        provider: name
       }
     end
   end
@@ -92,7 +92,7 @@ class Puppet::Provider::ElasticUserCommand < Puppet::Provider
     end
 
     self.class.command_with_path(arguments, resource[:configdir])
-    @property_hash = self.class.fetch_users.detect do |u|
+    @property_hash = self.class.fetch_users.find do |u|
       u[:name] == resource[:name]
     end
   end

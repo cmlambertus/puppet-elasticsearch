@@ -2,7 +2,7 @@ require 'json'
 require 'helpers/acceptance/tests/basic_shared_examples'
 
 shared_examples 'user/group acceptance tests' do
-  describe 'user/group parameters', :first_purge => true, :then_purge => true do
+  describe 'user/group parameters', first_purge: true, then_purge: true do
     describe 'with non-default values', :with_cleanup do
       let(:extra_manifest) do
         <<-MANIFEST
@@ -41,7 +41,7 @@ shared_examples 'user/group acceptance tests' do
         /var/log/elasticsearch
       ].each do |path|
         describe file(path) do
-          it { should be_owned_by 'esuser' }
+          it { is_expected.to be_owned_by 'esuser' }
         end
       end
     end

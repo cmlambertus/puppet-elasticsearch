@@ -22,7 +22,7 @@ run_puppet_install_helper('agent') unless ENV['BEAKER_provision'] == 'no'
 
 RSpec.configure do |c|
   # General-purpose spec-global variables
-  c.add_setting :v, :default => {}
+  c.add_setting :v, default: {}
 
   # Puppet debug logging
   v[:puppet_debug] = ENV['BEAKER_debug'] ? true : false
@@ -32,7 +32,7 @@ RSpec.configure do |c|
     v[:is_snapshot] = ENV['SNAPSHOT_TEST'] == 'true'
   end
 
-  unless ENV['ELASTICSEARCH_VERSION'].nil? and v[:snapshot_version].nil?
+  unless ENV['ELASTICSEARCH_VERSION'].nil? && v[:snapshot_version].nil?
     v[:elasticsearch_full_version] = ENV['ELASTICSEARCH_VERSION'] || v[:snapshot_version]
     v[:elasticsearch_major_version] = v[:elasticsearch_full_version].split('.').first.to_i
     v[:elasticsearch_package] = {}
@@ -50,18 +50,18 @@ RSpec.configure do |c|
       artifact("*#{v[:elasticsearch_full_version]}.zip", ['plugins'])
     ].map do |plugin|
       plugin_filename = File.basename(plugin)
-      plugin_name = plugin_filename.match(/^(?<name>.+)-#{v[:elasticsearch_full_version]}.zip/)[:name]
+      plugin_name = plugin_filename.match(%r{^(?<name>.+)-#{v[:elasticsearch_full_version]}.zip})[:name]
       [
         plugin_name,
         {
-          :path => plugin,
-          :url => derive_plugin_urls_for(v[:elasticsearch_full_version], [plugin_name]).keys.first
+          path: plugin,
+          url: derive_plugin_urls_for(v[:elasticsearch_full_version], [plugin_name]).keys.first
         }
       ]
     end.to_h
   end
 
-  v[:oss] = (not ENV['OSS_PACKAGE'].nil?) and ENV['OSS_PACKAGE'] == 'true'
+  (v[:oss] = !ENV['OSS_PACKAGE'].nil?) && ENV['OSS_PACKAGE'] == 'true'
   v[:cluster_name] = SecureRandom.hex(10)
 
   # rspec-retry
@@ -203,7 +203,7 @@ RSpec.configure do |c|
 
   c.before :suite do
     # Install module and dependencies
-    install_dev_puppet_module :ignore_list => [
+    install_dev_puppet_module ignore_list: [
       'junit'
     ] + Beaker::DSL::InstallUtils::ModuleUtils::PUPPET_MODULE_INSTALL_IGNORE
 
@@ -221,8 +221,8 @@ RSpec.configure do |c|
       modules.each do |mod|
         copy_module_to(
           host,
-          :module_name => mod,
-          :source      => "spec/fixtures/modules/#{mod}"
+          module_name: mod,
+          source: "spec/fixtures/modules/#{mod}"
         )
       end
 
@@ -233,7 +233,7 @@ RSpec.configure do |c|
     end
 
     # Use the Java class once before the suite of tests
-    unless shell('command -v java', :accept_all_exit_codes => true).exit_code.zero?
+    unless shell('command -v java', accept_all_exit_codes: true).exit_code.zero?
       java = case fact('os.name')
              when 'OpenSuSE'
                'package => "java-1_8_0-openjdk-headless",'

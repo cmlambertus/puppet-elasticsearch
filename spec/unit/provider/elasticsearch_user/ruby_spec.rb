@@ -2,7 +2,7 @@ require 'spec_helper_rspec'
 
 describe Puppet::Type.type(:elasticsearch_user).provider(:ruby) do
   describe 'instances' do
-    it 'should have an instance method' do
+    it 'has an instance method' do
       expect(described_class).to respond_to :instances
     end
 
@@ -13,7 +13,7 @@ describe Puppet::Type.type(:elasticsearch_user).provider(:ruby) do
         )
       end
 
-      it 'should return no resources' do
+      it 'returns no resources' do
         expect(described_class.instances.size).to eq(0)
       end
     end
@@ -25,13 +25,13 @@ describe Puppet::Type.type(:elasticsearch_user).provider(:ruby) do
         )
       end
 
-      it 'should return one resource' do
+      it 'returns one resource' do
         expect(described_class.instances[0].instance_variable_get(
-          '@property_hash'
+                 '@property_hash'
         )).to eq(
-          :ensure   => :present,
-          :name     => 'elastic',
-          :provider => :ruby
+          ensure: :present,
+          name: 'elastic',
+          provider: :ruby
         )
       end
     end
@@ -49,14 +49,14 @@ describe Puppet::Type.type(:elasticsearch_user).provider(:ruby) do
         )
       end
 
-      it 'should return three resources' do
+      it 'returns three resources' do
         expect(described_class.instances.length).to eq(3)
       end
     end
   end # of describe instances
 
   describe 'prefetch' do
-    it 'should have a prefetch method' do
+    it 'has a prefetch method' do
       expect(described_class).to respond_to :prefetch
     end
   end

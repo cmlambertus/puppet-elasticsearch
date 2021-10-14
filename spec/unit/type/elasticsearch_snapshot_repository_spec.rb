@@ -5,7 +5,7 @@ describe Puppet::Type.type(:elasticsearch_snapshot_repository) do
 
   let(:default_params) do
     {
-      :location => '/backup'
+      location: '/backup'
     }
   end
 
@@ -42,63 +42,63 @@ describe Puppet::Type.type(:elasticsearch_snapshot_repository) do
     end
 
     describe 'namevar validation' do
-      it 'should have :name as its namevar' do
+      it 'has :name as its namevar' do
         expect(described_class.key_attributes).to eq([:name])
       end
     end
 
     describe 'ensure' do
-      it 'should support present as a value for ensure' do
+      it 'supports present as a value for ensure' do
         expect do
           described_class.new(
             default_params.merge(
-              :name => resource_name,
-              :ensure => :present
+              name: resource_name,
+              ensure: :present
             )
           )
-        end.to_not raise_error
+        end.not_to raise_error
       end
 
-      it 'should support absent as a value for ensure' do
+      it 'supports absent as a value for ensure' do
         expect do
           described_class.new(
             default_params.merge(
-              :name => resource_name,
-              :ensure => :absent
+              name: resource_name,
+              ensure: :absent
             )
           )
-        end.to_not raise_error
+        end.not_to raise_error
       end
 
-      it 'should not support other values' do
+      it 'does not support other values' do
         expect do
           described_class.new(
             default_params.merge(
-              :name => resource_name,
-              :ensure => :foo
+              name: resource_name,
+              ensure: :foo
             )
           )
-        end.to raise_error(Puppet::Error, /Invalid value/)
+        end.to raise_error(Puppet::Error, %r{Invalid value})
       end
     end
 
     describe 'location' do
-      it 'should be required' do
+      it 'is required' do
         expect do
           described_class.new(
-            :name => resource_name
+            name: resource_name
           )
-        end.to raise_error(Puppet::Error, /Location is required./)
+        end.to raise_error(Puppet::Error, %r{Location is required.})
       end
     end
 
     describe 'host' do
-      it 'should accept IP addresses' do
+      it 'accepts IP addresses' do
         expect do
           described_class.new(
             default_params.merge(
-              :name => resource_name,
-              :host => '127.0.0.1'
+              name: resource_name,
+              host: '127.0.0.1'
             )
           )
         end.not_to raise_error
@@ -111,11 +111,11 @@ describe Puppet::Type.type(:elasticsearch_snapshot_repository) do
           expect do
             described_class.new(
               default_params.merge(
-                :name => resource_name,
-                :port => value
+                name: resource_name,
+                port: value
               )
             )
-          end.to raise_error(Puppet::Error, /invalid port/i)
+          end.to raise_error(Puppet::Error, %r{invalid port}i)
         end
       end
     end
@@ -126,11 +126,11 @@ describe Puppet::Type.type(:elasticsearch_snapshot_repository) do
           expect do
             described_class.new(
               default_params.merge(
-                :name => resource_name,
-                :validate_tls => value
+                name: resource_name,
+                validate_tls: value
               )
             )
-          end.to raise_error(Puppet::Error, /invalid value/i)
+          end.to raise_error(Puppet::Error, %r{invalid value}i)
         end
       end
 
@@ -139,8 +139,8 @@ describe Puppet::Type.type(:elasticsearch_snapshot_repository) do
           expect do
             described_class.new(
               default_params.merge(
-                :name => resource_name,
-                :validate_tls => value
+                name: resource_name,
+                validate_tls: value
               )
             )
           end.not_to raise_error
@@ -149,48 +149,48 @@ describe Puppet::Type.type(:elasticsearch_snapshot_repository) do
     end
 
     describe 'timeout' do
-      it 'should reject string values' do
+      it 'rejects string values' do
         expect do
           described_class.new(
             default_params.merge(
-              :name => resource_name,
-              :timeout => 'foo'
+              name: resource_name,
+              timeout: 'foo'
             )
           )
-        end.to raise_error(Puppet::Error, /must be a/)
+        end.to raise_error(Puppet::Error, %r{must be a})
       end
 
-      it 'should reject negative integers' do
+      it 'rejects negative integers' do
         expect do
           described_class.new(
             default_params.merge(
-              :name => resource_name,
-              :timeout => -10
+              name: resource_name,
+              timeout: -10
             )
           )
-        end.to raise_error(Puppet::Error, /must be a/)
+        end.to raise_error(Puppet::Error, %r{must be a})
       end
 
-      it 'should accept integers' do
+      it 'accepts integers' do
         expect do
           described_class.new(
             default_params.merge(
-              :name => resource_name,
-              :timeout => 10
+              name: resource_name,
+              timeout: 10
             )
           )
-        end.to_not raise_error
+        end.not_to raise_error
       end
 
-      it 'should accept quoted integers' do
+      it 'accepts quoted integers' do
         expect do
           described_class.new(
             default_params.merge(
-              :name => resource_name,
-              :timeout => '10'
+              name: resource_name,
+              timeout: '10'
             )
           )
-        end.to_not raise_error
+        end.not_to raise_error
       end
     end
   end # of describing when validing values include_examples 'REST API types', 'snapshot_repository'

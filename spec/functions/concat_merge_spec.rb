@@ -1,29 +1,36 @@
 require 'spec_helper'
-
-# rubocop:disable Style/BracesAroundHashParameters
 # rubocop:disable Style/IndentHash
 describe 'concat_merge' do
   describe 'exception handling' do
-    it { is_expected.to run.with_params.and_raise_error(
-      Puppet::ParseError, /wrong number of arguments/i
-    ) }
+    it {
+      is_expected.to run.with_params.and_raise_error(
+        Puppet::ParseError, %r{wrong number of arguments}i
+      )
+    }
 
-    it { is_expected.to run.with_params({}).and_raise_error(
-      Puppet::ParseError, /wrong number of arguments/i
-    ) }
+    it {
+      is_expected.to run.with_params({}).and_raise_error(
+        Puppet::ParseError, %r{wrong number of arguments}i
+      )
+    }
 
-    it { is_expected.to run.with_params('2', 2).and_raise_error(
-      Puppet::ParseError, /unexpected argument type/
-    ) }
+    it {
+      is_expected.to run.with_params('2', 2).and_raise_error(
+        Puppet::ParseError, %r{unexpected argument type}
+      )
+    }
 
-    it { is_expected.to run.with_params(2, '2').and_raise_error(
-      Puppet::ParseError, /unexpected argument type/
-    ) }
+    it {
+      is_expected.to run.with_params(2, '2').and_raise_error(
+        Puppet::ParseError, %r{unexpected argument type}
+      )
+    }
   end
 
   describe 'collisions' do
     context 'single keys' do
-      it { is_expected.to run.with_params({
+      it {
+        is_expected.to run.with_params({
         'key1' => 'value1'
       }, {
         'key1' => 'value2'
@@ -31,7 +38,8 @@ describe 'concat_merge' do
         'key1' => 'value2'
       }) }
 
-      it { is_expected.to run.with_params({
+      it {
+        is_expected.to run.with_params({
         'key1' => 'value1'
       }, {
         'key1' => 'value2'
@@ -43,7 +51,8 @@ describe 'concat_merge' do
     end
 
     context 'multiple keys' do
-      it { is_expected.to run.with_params({
+      it {
+        is_expected.to run.with_params({
         'key1' => 'value1',
         'key2' => 'value2'
       }, {
@@ -53,7 +62,8 @@ describe 'concat_merge' do
         'key2' => 'value2'
       }) }
 
-      it { is_expected.to run.with_params({
+      it {
+        is_expected.to run.with_params({
         'key1' => 'value1',
         'key2' => 'value1'
       }, {
@@ -70,7 +80,8 @@ describe 'concat_merge' do
 
   describe 'concat merging' do
     context 'single keys' do
-      it { is_expected.to run.with_params({
+      it {
+        is_expected.to run.with_params({
         'key1' => ['value1']
       }, {
         'key1' => ['value2']
@@ -78,7 +89,8 @@ describe 'concat_merge' do
         'key1' => %w[value1 value2]
       }) }
 
-      it { is_expected.to run.with_params({
+      it {
+        is_expected.to run.with_params({
         'key1' => ['value1']
       }, {
         'key1' => ['value2']
@@ -88,7 +100,8 @@ describe 'concat_merge' do
         'key1' => %w[value1 value2 value3]
       }) }
 
-      it { is_expected.to run.with_params({
+      it {
+        is_expected.to run.with_params({
         'key1' => ['value1']
       }, {
         'key1' => 'value2'
@@ -96,7 +109,8 @@ describe 'concat_merge' do
         'key1' => 'value2'
       }) }
 
-      it { is_expected.to run.with_params({
+      it {
+        is_expected.to run.with_params({
         'key1' => 'value1'
       }, {
         'key1' => ['value2']
@@ -106,7 +120,8 @@ describe 'concat_merge' do
     end
 
     context 'multiple keys' do
-      it { is_expected.to run.with_params({
+      it {
+        is_expected.to run.with_params({
         'key1' => ['value1'],
         'key2' => ['value3']
       }, {
@@ -117,7 +132,8 @@ describe 'concat_merge' do
         'key2' => %w[value3 value4]
       }) }
 
-      it { is_expected.to run.with_params({
+      it {
+        is_expected.to run.with_params({
         'key1' => ['value1'],
         'key2' => ['value1.1']
       }, {
@@ -131,7 +147,8 @@ describe 'concat_merge' do
         'key2' => ['value1.1', 'value2.1', 'value3.1']
       }) }
 
-      it { is_expected.to run.with_params({
+      it {
+        is_expected.to run.with_params({
         'key1' => ['value1'],
         'key2' => 'value1'
       }, {
@@ -142,7 +159,8 @@ describe 'concat_merge' do
         'key2' => ['value2']
       }) }
 
-      it { is_expected.to run.with_params({
+      it {
+        is_expected.to run.with_params({
         'key1' => 'value1',
         'key2' => ['value1']
       }, {
@@ -151,11 +169,12 @@ describe 'concat_merge' do
       }).and_return(
         'key1' => ['value2'],
         'key2' => 'value2'
-      ) }
+      )
+      }
     end
   end
 
-  it 'should not change the original hashes' do
+  it 'does not change the original hashes' do
     argument1 = { 'key1' => 'value1' }
     original1 = argument1.dup
     argument2 = { 'key2' => 'value2' }
