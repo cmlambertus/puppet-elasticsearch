@@ -40,14 +40,18 @@ class Puppet::Provider::ElasticPlugin < Puppet::Provider
       # in one. Therefore, we need to find the first "sub" plugin that
       # indicates which version of x-pack this is.
       properties = properties_files.sort.map do |prop_file|
-        IO.readlines(prop_file).map(&:strip).reject do |line|
+        lines = IO.readlines(prop_file).map(&:strip).reject do |line|
           line.start_with?('#') || line.empty?
-        end.map do |property|
+        end
+        lines = lines.map do |property|
           property.split('=')
-        end.select do |pairs|
+        end
+        lines = lines.select do |pairs|
           pairs.length == 2
-        end.to_h
-      end.find { |prop| prop.key? 'version' }
+        end
+        lines.to_h
+      end
+      properties = properties.find { |prop| prop.key? 'version' }
 
       if properties && properties['version'] != plugin_version
         debug "Elasticsearch plugin #{@resource[:name]} not version #{plugin_version}, reinstalling"

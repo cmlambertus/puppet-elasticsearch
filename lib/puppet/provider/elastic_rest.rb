@@ -156,7 +156,7 @@ class Puppet::Provider::ElasticREST < Puppet::Provider
   # fetch any templates we can before associating resources and providers.
   def self.prefetch(resources)
     # Get all relevant API access methods from the resources we know about
-    resources.map do |_, resource|
+    res = resources.map do |_, resource|
       p = resource.parameters
       [
         p[:protocol].value,
@@ -170,11 +170,13 @@ class Puppet::Provider::ElasticREST < Puppet::Provider
         (p.key?(:ca_path) ? p[:ca_path].value : nil)
       ]
       # Deduplicate identical settings, and fetch templates
-    end.uniq.map do |api|
+    end.uniq
+    res = res.map do |api|
       api_objects(*api)
       # Flatten and deduplicate the array, instantiate providers, and do the
       # typical association dance
-    end.flatten.uniq.map { |resource| new resource }.each do |prov|
+    end
+    res.flatten.uniq.map { |resource| new resource }.each do |prov|
       if (resource = resources[prov.name])
         resource.provider = prov
       end

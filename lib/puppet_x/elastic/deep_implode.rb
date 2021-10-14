@@ -1,4 +1,4 @@
-module Puppet_X
+module Puppet_X # rubocop:disable Style/ClassAndModuleCamelCase
   # Custom ruby for some Elastic utilities.
   module Elastic
     # Recursively implode a hash into dot-delimited structure of Hash

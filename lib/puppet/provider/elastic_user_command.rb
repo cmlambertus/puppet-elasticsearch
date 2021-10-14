@@ -41,13 +41,17 @@ class Puppet::Provider::ElasticUserCommand < Puppet::Provider
     end
 
     debug("Raw command output: #{output}")
-    output.split("\n").select do |u|
+    matching_lines = output.split("\n").select do |u|
       # Keep only expected "user : role1,role2" formatted lines
       u[%r{^[^:]+:\s+\S+$}]
-    end.map do |u|
+    end
+
+    users = matching_lines.map do |u|
       # Break into ["user ", " role1,role2"]
       u.split(':').first.strip
-    end.map do |user|
+    end
+
+    users.map do |user|
       {
         name: user,
         ensure: :present,

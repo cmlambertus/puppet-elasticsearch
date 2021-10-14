@@ -1,5 +1,5 @@
 # Custom extensions namespace
-module Puppet_X
+module Puppet_X # rubocop:disable Style/ClassAndModuleCamelCase
   # Elastic helpers
   module Elastic
     # Utility extension for consistent to_yaml behavior.

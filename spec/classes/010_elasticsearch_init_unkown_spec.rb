@@ -7,7 +7,7 @@ describe 'elasticsearch', type: 'class' do
         { operatingsystem: 'Windows' }
       end
 
-      it { expect { is_expected.to raise_error(Puppet::Error) } }
+      it { is_expected.to raise_error(Puppet::Error) }
     end
   end
 end

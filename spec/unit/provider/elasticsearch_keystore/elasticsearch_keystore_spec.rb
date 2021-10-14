@@ -47,7 +47,7 @@ describe Puppet::Type.type(:elasticsearch_keystore).provider(:elasticsearch_keys
           with("#{instance_dir}/elasticsearch.keystore").
           and_return(true)
 
-        expect(described_class).
+        allow(described_class).
           to receive(:execute).
           with(
             [executable, 'list'],
@@ -109,7 +109,7 @@ describe Puppet::Type.type(:elasticsearch_keystore).provider(:elasticsearch_keys
     end
 
     it 'creates the keystore' do
-      expect(described_class).to(
+      allow(described_class).to(
         receive(:execute).
           with(
             [executable, 'create'],
@@ -126,16 +126,33 @@ describe Puppet::Type.type(:elasticsearch_keystore).provider(:elasticsearch_keys
       resource[:ensure] = :present
       provider.create
       provider.flush
+      expect(described_class).to(
+        have_received(:execute).
+          with(
+            [executable, 'create'],
+            custom_environment: {
+              'ES_INCLUDE' => '/etc/default/elasticsearch-es-03',
+              'ES_PATH_CONF' => '/etc/elasticsearch/es-03'
+            },
+            uid: 'elasticsearch',
+            gid: 'elasticsearch',
+            failonfail: true
+          )
+      )
     end
 
     it 'deletes the keystore' do
-      expect(File).to(
+      allow(File).to(
         receive(:delete).
           with(File.join(%w[/ etc elasticsearch es-03 elasticsearch.keystore]))
       )
       resource[:ensure] = :absent
       provider.destroy
       provider.flush
+      expect(File).to(
+        have_received(:delete).
+          with(File.join(%w[/ etc elasticsearch es-03 elasticsearch.keystore]))
+      )
     end
 
     it 'updates settings' do
@@ -145,7 +162,7 @@ describe Puppet::Type.type(:elasticsearch_keystore).provider(:elasticsearch_keys
       }
 
       settings.each do |setting, value|
-        expect(provider.class).to(
+        allow(provider.class).to(
           receive(:run_keystore).
             with(['add', '--force', '--stdin', setting], 'es-03', '/etc/elasticsearch', value).
             and_return(Puppet::Util::Execution::ProcessOutput.new('', 0))
@@ -158,6 +175,13 @@ describe Puppet::Type.type(:elasticsearch_keystore).provider(:elasticsearch_keys
       resource[:settings] = [settings]
       provider.settings = [settings]
       provider.flush
+
+      settings.each do |setting, value|
+        expect(provider.class).to(
+          have_received(:run_keystore).
+            with(['add', '--force', '--stdin', setting], 'es-03', '/etc/elasticsearch', value)
+        )
+      end
     end
   end # of describe flush
 end # of describe Puppet::Type elasticsearch_keystore

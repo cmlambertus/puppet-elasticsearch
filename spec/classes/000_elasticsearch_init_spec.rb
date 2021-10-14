@@ -128,7 +128,7 @@ describe 'elasticsearch', type: 'class' do
             )
           end
 
-          it { expect { is_expected.to raise_error(Puppet::Error) } }
+          it { is_expected.to raise_error(Puppet::Error) }
         end
 
         context 'via package_url setting' do

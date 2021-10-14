@@ -1,4 +1,4 @@
-module Puppet_X
+module Puppet_X # rubocop:disable Style/ClassAndModuleCamelCase
   # Custom Elastic functions
   module Elastic
     # This ugly hack is required due to the fact Puppet passes in the

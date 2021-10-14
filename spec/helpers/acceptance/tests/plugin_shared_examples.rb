@@ -15,7 +15,7 @@ shared_examples 'plugin acceptance tests' do |es_config, plugins|
       include_examples('invalid manifest application')
     end
 
-    before :all do
+    before :all do # rubocop:disable RSpec/BeforeAfterAll
       shell "mkdir -p #{default['distmoduledir']}/another/files"
     end
 
@@ -47,7 +47,7 @@ shared_examples 'plugin acceptance tests' do |es_config, plugins|
           end
 
           describe 'offline via puppet://', :with_cleanup do
-            before :all do
+            before :all do # rubocop:disable RSpec/BeforeAfterAll
               scp_to(
                 default,
                 meta[:path],

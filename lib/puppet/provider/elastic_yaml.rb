@@ -34,10 +34,12 @@ class Puppet::Provider::ElasticYaml < Puppet::Provider::ElasticParsedFile
     yaml = records.map do |record|
       # Convert top-level symbols to strings
       Hash[record.map { |k, v| [k.to_s, v] }]
-    end.reduce({}) do |hash, record|
+    end
+    yaml = yaml.reduce({}) do |hash, record|
       # Flatten array of hashes into single hash
       hash.merge(record['name'] => record.delete(@metadata.to_s))
-    end.extend(Puppet_X::Elastic::SortedHash).to_yaml.split("\n")
+    end
+    yaml = yaml.extend(Puppet_X::Elastic::SortedHash).to_yaml.split("\n")
 
     yaml.shift if yaml.first =~ %r{---}
     yaml = yaml.join("\n")

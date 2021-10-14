@@ -1,4 +1,4 @@
-module Puppet_X
+module Puppet_X # rubocop:disable Style/ClassAndModuleCamelCase
   # Custom Elastic functions
   module Elastic
     # When given a hash, this method recurses deeply into all values to convert

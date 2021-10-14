@@ -1,6 +1,6 @@
 class ElasticPluginParseFailure < StandardError; end
 
-module Puppet_X
+module Puppet_X # rubocop:disable Style/ClassAndModuleCamelCase
   # Custom functions for plugin string parsing.
   module Elastic
     def self.plugin_name(raw_name)

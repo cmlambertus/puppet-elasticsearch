@@ -1,4 +1,4 @@
-module Puppet_X
+module Puppet_X # rubocop:disable Style/ClassAndModuleCamelCase
   # Custom Elastic functions
   module Elastic
     # Certain Elasticsearch APIs return fields that are present in responses

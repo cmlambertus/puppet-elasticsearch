@@ -9,7 +9,7 @@ shared_examples 'hiera tests with' do |es_config, additional_yaml = {}|
     'elasticsearch::config' => es_config
   }.merge(additional_yaml).to_yaml
 
-  before :all do
+  before :all do # rubocop:disable RSpec/BeforeAfterAll
     write_hieradata_to(agents, hieradata)
   end
 
@@ -74,7 +74,7 @@ shared_examples 'hiera acceptance tests' do |es_config, plugins|
       end
     end
 
-    after :all do
+    after :all do # rubocop:disable RSpec/BeforeAfterAll
       write_hieradata_to(agents, {})
 
       # Ensure that elasticsearch is cleaned up before any other tests

@@ -9,7 +9,7 @@ shared_examples 'security plugin manifest' do |credentials|
         #{meta[:changed] ? "notify { 'password change for #{username}' : } ~>" : ''}
         elasticsearch::user { '#{username}':
           password => '#{meta[:hash] ? meta[:hash] : meta[:plaintext]}',
-          roles    => #{meta[:roles].reduce({}) { |a, e| a.merge(e) }.keys},
+          roles    => #{meta[:roles].reduce({}) { |acc, elem| acc.merge(elem) }.keys},
         }
       USER
     end.join("\n")
@@ -17,17 +17,21 @@ shared_examples 'security plugin manifest' do |credentials|
     roles = credentials.values.reduce({}) do |sum, user_metadata|
       # Collect all roles across users
       sum.merge user_metadata
-    end[:roles].reduce({}) do |all_roles, role|
+    end[:roles]
+    roles = roles.reduce({}) do |all_roles, role|
       all_roles.merge role
-    end.reject do |_role, permissions|
+    end
+    roles = roles.reject do |_role, permissions|
       permissions.empty?
-    end.map do |role, rights|
+    end
+    roles = roles.map do |role, rights|
       <<-ROLE
         elasticsearch::role { '#{role}':
             privileges => #{rights}
         }
       ROLE
-    end.join("\n")
+    end
+    roles = roles.join("\n")
 
     <<-MANIFEST
       #{users}
@@ -38,7 +42,7 @@ shared_examples 'security plugin manifest' do |credentials|
 
   include_examples(
     'manifest application',
-    credentials.values.map { |p| p[:changed] }.none?)
+    credentials.values.map { |p| p[:changed] }.none?
   )
 end
 
@@ -76,13 +80,13 @@ shared_examples 'security acceptance tests' do |es_config|
       <<-MANIFEST
         api_basic_auth_password => '#{admin_password}',
         api_basic_auth_username => '#{admin_user}',
-        api_ca_file             => '#{@tls[:ca][:cert][:path]}',
+        api_ca_file             => '#{tls[:ca][:cert][:path]}',
         api_protocol            => 'https',
-        ca_certificate          => '#{@tls[:ca][:cert][:path]}',
-        certificate             => '#{@tls[:clients].first[:cert][:path]}',
-        keystore_password       => '#{@keystore_password}',
+        ca_certificate          => '#{tls[:ca][:cert][:path]}',
+        certificate             => '#{tls[:clients].first[:cert][:path]}',
+        keystore_password       => '#{keystore_password}',
         license                 => file('#{v[:elasticsearch_license_path]}'),
-        private_key             => '#{@tls[:clients].first[:key][:path]}',
+        private_key             => '#{tls[:clients].first[:key][:path]}',
         restart_on_change       => true,
         ssl                     => true,
         validate_tls            => true,

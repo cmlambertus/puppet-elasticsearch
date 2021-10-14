@@ -1,6 +1,6 @@
 class ElasticsearchPackageNotFoundError < StandardError; end
 
-module Puppet_X
+module Puppet_X # rubocop:disable Style/ClassAndModuleCamelCase
   module Elastic
     # Assists with discerning the locally installed version of Elasticsearch.
     # Implemented in a way to be called from native types and providers in order

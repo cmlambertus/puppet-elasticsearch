@@ -9,7 +9,7 @@ shared_examples 'plugin provider' do |version|
 
     describe 'setup' do
       it 'installs with default parameters' do
-        expect(provider).to receive(:plugin).with(
+        allow(provider).to receive(:plugin).with(
           ['install', resource_name].tap do |args|
             if Puppet::Util::Package.versioncmp(version, '2.2.0') >= 0
               args.insert 1, '--batch'
@@ -17,11 +17,18 @@ shared_examples 'plugin provider' do |version|
           end
         )
         provider.create
+        expect(provider).to have_received(:plugin).with(
+          ['install', resource_name].tap do |args|
+            if Puppet::Util::Package.versioncmp(version, '2.2.0') >= 0
+              args.insert 1, '--batch'
+            end
+          end
+        )
       end
 
       it 'installs via URLs' do
         resource[:url] = 'http://url/to/my/plugin.zip'
-        expect(provider).to receive(:plugin).with(
+        allow(provider).to receive(:plugin).with(
           ['install'] + ['http://url/to/my/plugin.zip'].tap do |args|
             args.unshift('kopf', '--url') if version.start_with? '1'
 
@@ -33,11 +40,22 @@ shared_examples 'plugin provider' do |version|
           end
         )
         provider.create
+        expect(provider).to have_received(:plugin).with(
+          ['install'] + ['http://url/to/my/plugin.zip'].tap do |args|
+            args.unshift('kopf', '--url') if version.start_with? '1'
+
+            if Puppet::Util::Package.versioncmp(version, '2.2.0') >= 0
+              args.unshift '--batch'
+            end
+
+            args
+          end
+        )
       end
 
       it 'installs with a local file' do
         resource[:source] = '/tmp/plugin.zip'
-        expect(provider).to receive(:plugin).with(
+        allow(provider).to receive(:plugin).with(
           ['install'] + ['file:///tmp/plugin.zip'].tap do |args|
             args.unshift('kopf', '--url') if version.start_with? '1'
 
@@ -49,12 +67,23 @@ shared_examples 'plugin provider' do |version|
           end
         )
         provider.create
+        expect(provider).to have_received(:plugin).with(
+          ['install'] + ['file:///tmp/plugin.zip'].tap do |args|
+            args.unshift('kopf', '--url') if version.start_with? '1'
+
+            if Puppet::Util::Package.versioncmp(version, '2.2.0') >= 0
+              args.unshift '--batch'
+            end
+
+            args
+          end
+        )
       end
 
       describe 'proxying' do
         it 'installs behind a proxy' do
           resource[:proxy] = 'http://localhost:3128'
-          expect(provider).
+          allow(provider).
             to receive(:plugin).
             with([
                    '-Dhttp.proxyHost=localhost',
@@ -66,11 +95,22 @@ shared_examples 'plugin provider' do |version|
                    resource_name
                  ])
           provider.create
+          expect(provider).
+            to have_received(:plugin).
+            with([
+                   '-Dhttp.proxyHost=localhost',
+                   '-Dhttp.proxyPort=3128',
+                   '-Dhttps.proxyHost=localhost',
+                   '-Dhttps.proxyPort=3128',
+                   'install',
+                   '--batch',
+                   resource_name
+                 ])
         end
 
         it 'uses authentication credentials' do
           resource[:proxy] = 'http://elastic:password@es.local:8080'
-          expect(provider).
+          allow(provider).
             to receive(:plugin).
             with([
                    '-Dhttp.proxyHost=es.local',
@@ -86,6 +126,21 @@ shared_examples 'plugin provider' do |version|
                    resource_name
                  ])
           provider.create
+          expect(provider).
+            to have_received(:plugin).
+            with([
+                   '-Dhttp.proxyHost=es.local',
+                   '-Dhttp.proxyPort=8080',
+                   '-Dhttp.proxyUser=elastic',
+                   '-Dhttp.proxyPassword=password',
+                   '-Dhttps.proxyHost=es.local',
+                   '-Dhttps.proxyPort=8080',
+                   '-Dhttps.proxyUser=elastic',
+                   '-Dhttps.proxyPassword=password',
+                   'install',
+                   '--batch',
+                   resource_name
+                 ])
         end
       end
 
@@ -137,10 +192,13 @@ shared_examples 'plugin provider' do |version|
 
     describe 'removal' do
       it 'uninstalls the plugin' do
-        expect(provider).to receive(:plugin).with(
+        allow(provider).to receive(:plugin).with(
           ['remove', resource_name.split('-').last]
         )
         provider.destroy
+        expect(provider).to have_received(:plugin).with(
+          ['remove', resource_name.split('-').last]
+        )
       end
     end
   end

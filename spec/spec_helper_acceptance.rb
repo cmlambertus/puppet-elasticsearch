@@ -37,14 +37,14 @@ RSpec.configure do |c|
     v[:elasticsearch_major_version] = v[:elasticsearch_full_version].split('.').first.to_i
     v[:elasticsearch_package] = {}
     v[:template] = if v[:elasticsearch_major_version] == 6
-                     JSON.load(File.new('spec/fixtures/templates/6.x.json'))
+                     JSON.parse(File.new('spec/fixtures/templates/6.x.json'))
                    elsif v[:elasticsearch_major_version] >= 8
-                     JSON.load(File.new('spec/fixtures/templates/post_8.0.json'))
+                     JSON.parse(File.new('spec/fixtures/templates/post_8.0.json'))
                    else
-                     JSON.load(File.new('spec/fixtures/templates/7.x.json'))
+                     JSON.parse(File.new('spec/fixtures/templates/7.x.json'))
                    end
     v[:template] = Puppet_X::Elastic.deep_to_i(Puppet_X::Elastic.deep_to_s(v[:template]))
-    v[:pipeline] = JSON.load(File.new('spec/fixtures/pipelines/example.json'))
+    v[:pipeline] = JSON.parse(File.new('spec/fixtures/pipelines/example.json'))
 
     v[:elasticsearch_plugins] = Dir[
       artifact("*#{v[:elasticsearch_full_version]}.zip", ['plugins'])
@@ -90,19 +90,22 @@ RSpec.configure do |c|
     EOS
   end
 
-  c.before :context, :with_certificates do
-    @keystore_password = SecureRandom.hex
-    @role = [*('a'..'z')].sample(8).join
+  let(:keystore_password) do
+    SecureRandom.hex
+  end
 
+  let(:tls) do
     # Setup TLS cert placement
-    @tls = gen_certs(2, '/tmp')
+    tls = gen_certs(2, '/tmp')
 
-    create_remote_file hosts, @tls[:ca][:cert][:path], @tls[:ca][:cert][:pem]
-    @tls[:clients].each do |node|
+    create_remote_file hosts, tls[:ca][:cert][:path], tls[:ca][:cert][:pem]
+    tls[:clients].each do |node|
       node.each do |_type, params|
         create_remote_file hosts, params[:path], params[:pem]
       end
     end
+
+    tls
   end
 
   c.before :context, :with_license do

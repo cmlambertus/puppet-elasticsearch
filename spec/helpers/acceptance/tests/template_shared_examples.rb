@@ -57,7 +57,7 @@ end
 # Main entrypoint for template tests
 shared_examples 'template operations' do |es_config, template|
   describe 'template resources' do
-    before :all do
+    before :all do # rubocop:disable RSpec/BeforeAfterAll
       shell "mkdir -p #{default['distmoduledir']}/another/files"
 
       create_remote_file(

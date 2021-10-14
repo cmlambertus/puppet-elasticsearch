@@ -56,9 +56,11 @@ Puppet::Type.type(:elasticsearch_keystore).provide(
   end
 
   def self.present_keystores
-    Dir[File.join(%w[/ etc elasticsearch *])].select do |directory|
+    files = Dir[File.join(%w[/ etc elasticsearch *])].select do |directory|
       File.exist? File.join(directory, 'elasticsearch.keystore')
-    end.map do |instance|
+    end
+
+    files.map do |instance|
       settings = run_keystore(['list'], File.basename(instance)).split("\n")
       {
         name: File.basename(instance),
