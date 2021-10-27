@@ -8,7 +8,7 @@ require 'rspec/retry'
 require 'vault'
 
 require 'simp/beaker_helpers'
-include Simp::BeakerHelpers
+include Simp::BeakerHelpers # rubocop:disable Style/MixinUsage
 
 require_relative 'spec_helper_tls'
 require_relative 'spec_utilities'

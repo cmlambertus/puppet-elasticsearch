@@ -3,7 +3,7 @@
 require_relative 'helpers/class_shared_examples'
 require 'rspec-puppet-utils'
 require 'rspec-puppet-facts'
-include RspecPuppetFacts
+include RspecPuppetFacts # rubocop:disable Style/MixinUsage
 
 def fixture_path
   File.expand_path(File.join(__FILE__, '..', 'fixtures'))
