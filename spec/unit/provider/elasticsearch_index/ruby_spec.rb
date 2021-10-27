@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require_relative '../../../helpers/unit/provider/elasticsearch_rest_shared_examples'
 
 describe Puppet::Type.type(:elasticsearch_index).provider(:ruby) do

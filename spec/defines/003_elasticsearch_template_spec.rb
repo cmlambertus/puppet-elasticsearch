@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'spec_helper'
 
 describe 'elasticsearch::template', type: 'define' do
@@ -24,7 +26,7 @@ describe 'elasticsearch::template', type: 'define' do
       end
 
       describe 'parameter validation' do
-        [:api_ca_file, :api_ca_path].each do |param|
+        %i[api_ca_file api_ca_path].each do |param|
           let :params do
             {
               :ensure => 'present',
@@ -34,7 +36,7 @@ describe 'elasticsearch::template', type: 'define' do
           end
 
           it 'validates cert paths' do
-            is_expected.to compile.and_raise_error(%r{expects a})
+            expect(subject).to compile.and_raise_error(%r{expects a})
           end
         end
 
@@ -61,12 +63,14 @@ describe 'elasticsearch::template', type: 'define' do
         end
 
         it { is_expected.to contain_elasticsearch__template('foo') }
+
         it do
-          is_expected.to contain_es_instance_conn_validator('foo-template').
+          expect(subject).to contain_es_instance_conn_validator('foo-template').
             that_comes_before('Elasticsearch_template[foo]')
         end
+
         it 'passes through parameters' do
-          is_expected.to contain_elasticsearch_template('foo').with(
+          expect(subject).to contain_elasticsearch_template('foo').with(
             ensure: 'present',
             source: 'puppet:///path/to/foo.json',
             protocol: 'https',
@@ -104,7 +108,7 @@ describe 'elasticsearch::template', type: 'define' do
         end
 
         it do
-          is_expected.to contain_elasticsearch_template('foo').with(
+          expect(subject).to contain_elasticsearch_template('foo').with(
             ensure: 'present',
             content: '{}',
             protocol: 'https',
@@ -128,7 +132,7 @@ describe 'elasticsearch::template', type: 'define' do
         end
 
         it 'removes templates' do
-          is_expected.to contain_elasticsearch_template('foo').with(ensure: 'absent')
+          expect(subject).to contain_elasticsearch_template('foo').with(ensure: 'absent')
         end
       end
     end

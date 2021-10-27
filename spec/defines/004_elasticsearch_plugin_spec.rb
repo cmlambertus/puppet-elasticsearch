@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'spec_helper'
 
 describe 'elasticsearch::plugin', type: 'define' do
@@ -52,13 +54,13 @@ describe 'elasticsearch::plugin', type: 'define' do
 
       context 'configdir' do
         it {
-          is_expected.to contain_elasticsearch__plugin(
+          expect(subject).to contain_elasticsearch__plugin(
             'mobz/elasticsearch-head/1.0.0'
           ).with_configdir('/etc/elasticsearch')
         }
 
         it {
-          is_expected.to contain_elasticsearch_plugin(
+          expect(subject).to contain_elasticsearch_plugin(
             'mobz/elasticsearch-head/1.0.0'
           ).with_configdir('/etc/elasticsearch')
         }
@@ -75,17 +77,19 @@ describe 'elasticsearch::plugin', type: 'define' do
         end
 
         it {
-          is_expected.to contain_elasticsearch__plugin(
+          expect(subject).to contain_elasticsearch__plugin(
             'mobz/elasticsearch-head/1.0.0'
           )
         }
+
         it {
-          is_expected.to contain_elasticsearch_plugin(
+          expect(subject).to contain_elasticsearch_plugin(
             'mobz/elasticsearch-head/1.0.0'
           )
         }
+
         it {
-          is_expected.to contain_file(
+          expect(subject).to contain_file(
             '/usr/share/elasticsearch/plugins/head'
           ).that_requires(
             'Elasticsearch_plugin[mobz/elasticsearch-head/1.0.0]'
@@ -102,19 +106,21 @@ describe 'elasticsearch::plugin', type: 'define' do
         end
 
         it {
-          is_expected.to contain_elasticsearch__plugin(
+          expect(subject).to contain_elasticsearch__plugin(
             'mobz/elasticsearch-head/1.0.0'
           )
         }
+
         it {
-          is_expected.to contain_elasticsearch_plugin(
+          expect(subject).to contain_elasticsearch_plugin(
             'mobz/elasticsearch-head/1.0.0'
           ).with(
             ensure: 'absent'
           )
         }
+
         it {
-          is_expected.to contain_file(
+          expect(subject).to contain_file(
             '/usr/share/elasticsearch/plugins/head'
           ).that_requires(
             'Elasticsearch_plugin[mobz/elasticsearch-head/1.0.0]'
@@ -168,7 +174,7 @@ describe 'elasticsearch::plugin', type: 'define' do
         end
 
         it {
-          is_expected.not_to contain_elasticsearch_plugin(
+          expect(subject).not_to contain_elasticsearch_plugin(
             'head'
           ).that_notifies(
             'Service[elasticsearch]'
@@ -188,7 +194,7 @@ describe 'elasticsearch::plugin', type: 'define' do
         end
 
         it {
-          is_expected.to contain_elasticsearch_plugin(
+          expect(subject).to contain_elasticsearch_plugin(
             'head'
           ).that_notifies(
             'Service[elasticsearch]'
@@ -208,7 +214,7 @@ describe 'elasticsearch::plugin', type: 'define' do
         end
 
         it {
-          is_expected.not_to contain_elasticsearch_plugin(
+          expect(subject).not_to contain_elasticsearch_plugin(
             'head'
           ).that_notifies(
             'Service[elasticsearch]'
@@ -228,7 +234,7 @@ describe 'elasticsearch::plugin', type: 'define' do
         end
 
         it {
-          is_expected.to contain_elasticsearch_plugin(
+          expect(subject).to contain_elasticsearch_plugin(
             'head'
           ).that_notifies(
             'Service[elasticsearch]'
@@ -253,7 +259,7 @@ describe 'elasticsearch::plugin', type: 'define' do
           end
 
           it {
-            is_expected.to contain_elasticsearch_plugin(
+            expect(subject).to contain_elasticsearch_plugin(
               'head'
             ).with_proxy(
               'http://es.local:8080'
@@ -277,7 +283,7 @@ describe 'elasticsearch::plugin', type: 'define' do
           end
 
           it {
-            is_expected.to contain_elasticsearch_plugin(
+            expect(subject).to contain_elasticsearch_plugin(
               'head'
             ).with_proxy(
               'https://es.local:8080'
@@ -299,7 +305,7 @@ describe 'elasticsearch::plugin', type: 'define' do
           end
 
           it {
-            is_expected.to contain_elasticsearch_plugin(
+            expect(subject).to contain_elasticsearch_plugin(
               'head'
             ).with_proxy(
               'http://elastic:password@es.local:8080'
@@ -323,7 +329,7 @@ describe 'elasticsearch::plugin', type: 'define' do
           end
 
           it {
-            is_expected.to contain_elasticsearch_plugin(
+            expect(subject).to contain_elasticsearch_plugin(
               'head'
             ).with_proxy(
               'http://elastic:password@es.local:8080'
@@ -343,7 +349,7 @@ describe 'elasticsearch::plugin', type: 'define' do
         end
 
         it {
-          is_expected.to contain_elasticsearch__plugin(
+          expect(subject).to contain_elasticsearch__plugin(
             'head'
           ).that_requires(
             'Class[elasticsearch::config]'
@@ -351,7 +357,7 @@ describe 'elasticsearch::plugin', type: 'define' do
         }
 
         it {
-          is_expected.to contain_elasticsearch_plugin(
+          expect(subject).to contain_elasticsearch_plugin(
             'head'
           ).that_comes_before(
             'Service[elasticsearch]'

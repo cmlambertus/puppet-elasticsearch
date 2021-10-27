@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'spec_helper_rspec'
 
 describe Puppet::Type.type(:elasticsearch_role_mapping).provider(:ruby) do
@@ -41,7 +43,7 @@ describe Puppet::Type.type(:elasticsearch_role_mapping).provider(:ruby) do
         )).length).to eq(3)
       end
     end
-  end # of describe instances
+  end
 
   describe 'prefetch' do
     it 'has a prefetch method' do

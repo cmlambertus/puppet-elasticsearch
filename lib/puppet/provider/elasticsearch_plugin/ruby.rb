@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'puppet/provider/elastic_plugin'
 
 Puppet::Type.type(:elasticsearch_plugin).provide(

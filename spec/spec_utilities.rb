@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'bcrypt'
 require 'open-uri'
 
@@ -116,7 +118,7 @@ end
 def http_retry(url)
   retries ||= 0
   open(url).read
-rescue
+rescue StandardError
   retry if (retries += 1) < 3
 end
 

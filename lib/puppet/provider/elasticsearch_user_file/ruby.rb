@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'puppet/provider/elastic_parsedfile'
 
 Puppet::Type.type(:elasticsearch_user_file).provide(

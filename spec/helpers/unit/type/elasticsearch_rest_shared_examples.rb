@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'spec_helper_rspec'
 
 shared_examples 'REST API types' do |resource_type, meta_property|
@@ -6,19 +8,19 @@ shared_examples 'REST API types' do |resource_type, meta_property|
   end
 
   describe "attribute validation for #{resource_type}s" do
-    [
-      :name,
-      :host,
-      :port,
-      :protocol,
-      :validate_tls,
-      :ca_file,
-      :ca_path,
-      :timeout,
-      :username,
-      :password
+    %i[
+      name
+      host
+      port
+      protocol
+      validate_tls
+      ca_file
+      ca_path
+      timeout
+      username
+      password
     ].each do |param|
-      it "should have a #{param} parameter" do
+      it "has a #{param} parameter" do
         expect(described_class.attrtype(param)).to eq(:param)
       end
     end
@@ -27,7 +29,7 @@ shared_examples 'REST API types' do |resource_type, meta_property|
       :ensure,
       meta_property
     ].each do |prop|
-      it "should have a #{prop} property" do
+      it "has a #{prop} property" do
         expect(described_class.attrtype(prop)).to eq(:property)
       end
     end
@@ -123,7 +125,7 @@ shared_examples 'REST API types' do |resource_type, meta_property|
 
     describe 'port' do
       [-1, 0, 70_000, 'foo'].each do |value|
-        it "should reject invalid port value #{value}" do
+        it "rejects invalid port value #{value}" do
           expect do
             described_class.new(
               default_params.merge(
@@ -138,7 +140,7 @@ shared_examples 'REST API types' do |resource_type, meta_property|
 
     describe 'validate_tls' do
       [-1, 0, {}, [], 'foo'].each do |value|
-        it "should reject invalid ssl_verify value #{value}" do
+        it "rejects invalid ssl_verify value #{value}" do
           expect do
             described_class.new(
               default_params.merge(
@@ -151,7 +153,7 @@ shared_examples 'REST API types' do |resource_type, meta_property|
       end
 
       [true, false, 'true', 'false', 'yes', 'no'].each do |value|
-        it "should accept validate_tls value #{value}" do
+        it "accepts validate_tls value #{value}" do
           expect do
             described_class.new(
               default_params.merge(
@@ -209,5 +211,5 @@ shared_examples 'REST API types' do |resource_type, meta_property|
         end.not_to raise_error
       end
     end
-  end # of describing when validing values
-end # of REST API type shared examples
+  end
+end

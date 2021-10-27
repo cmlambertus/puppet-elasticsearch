@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'puppet/provider/elastic_yaml'
 
 # Provider to help manage file-based X-Pack user/role configuration
@@ -48,7 +50,7 @@ class Puppet::Provider::ElasticUserRoles < Puppet::Provider::ElasticYaml
     records = records.map do |role, users|
       "#{role}:#{users.join(',')}"
     end
-    records.join("\n") + "\n"
+    "#{records.join("\n")}\n"
   end
 
   def self.skip_record?(_record)

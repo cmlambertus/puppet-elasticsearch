@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'json'
 require 'spec_utilities'
 require 'helpers/acceptance/tests/manifest_shared_examples'
@@ -8,7 +10,7 @@ shared_examples 'security plugin manifest' do |credentials|
       <<-USER
         #{meta[:changed] ? "notify { 'password change for #{username}' : } ~>" : ''}
         elasticsearch::user { '#{username}':
-          password => '#{meta[:hash] ? meta[:hash] : meta[:plaintext]}',
+          password => '#{meta[:hash] || meta[:plaintext]}',
           roles    => #{meta[:roles].reduce({}) { |acc, elem| acc.merge(elem) }.keys},
         }
       USER
@@ -50,7 +52,7 @@ shared_examples 'secured request' do |test_desc, es_config, path, http_test, exp
   es_port = es_config['http.port']
   describe port(es_port) do
     it 'open', :with_retries do
-      is_expected.to be_listening
+      expect(subject).to be_listening
     end
   end
 

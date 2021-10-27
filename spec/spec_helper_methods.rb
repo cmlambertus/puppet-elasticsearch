@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require_relative 'helpers/class_shared_examples'
 require 'rspec-puppet-utils'
 require 'rspec-puppet-facts'
@@ -7,7 +9,7 @@ def fixture_path
   File.expand_path(File.join(__FILE__, '..', 'fixtures'))
 end
 
-$LOAD_PATH.unshift(File.expand_path(File.dirname(__FILE__) + '/../'))
+$LOAD_PATH.unshift(File.expand_path("#{File.dirname(__FILE__)}/../"))
 
 RSpec.configure do |c|
   c.mock_with :rspec

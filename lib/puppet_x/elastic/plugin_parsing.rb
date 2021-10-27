@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class ElasticPluginParseFailure < StandardError; end
 
 module Puppet_X # rubocop:disable Style/ClassAndModuleCamelCase
@@ -10,6 +12,7 @@ module Puppet_X # rubocop:disable Style/ClassAndModuleCamelCase
     def self.plugin_version(raw_name)
       v = plugin_split(raw_name, 2, false).gsub(%r{^[^0-9]*}, '')
       raise ElasticPluginParseFailure, "could not parse version, got '#{v}'" if v.empty?
+
       v
     end
 
@@ -31,5 +34,5 @@ module Puppet_X # rubocop:disable Style/ClassAndModuleCamelCase
 
       original_string
     end
-  end # of Elastic
-end # of Puppet_X
+  end
+end

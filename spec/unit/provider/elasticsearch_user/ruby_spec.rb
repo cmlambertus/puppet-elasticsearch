@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'spec_helper_rspec'
 
 describe Puppet::Type.type(:elasticsearch_user).provider(:ruby) do
@@ -25,11 +27,11 @@ describe Puppet::Type.type(:elasticsearch_user).provider(:ruby) do
 
         expect(described_class.instances[0].instance_variable_get(
                  '@property_hash'
-        )).to eq(
-          ensure: :present,
-          name: 'elastic',
-          provider: :ruby
-        )
+               )).to eq(
+                 ensure: :present,
+                 name: 'elastic',
+                 provider: :ruby
+               )
         expect(described_class).to have_received(:command_with_path).with('list')
       end
     end
@@ -53,7 +55,7 @@ describe Puppet::Type.type(:elasticsearch_user).provider(:ruby) do
         ).with('list')
       end
     end
-  end # of describe instances
+  end
 
   describe 'prefetch' do
     it 'has a prefetch method' do

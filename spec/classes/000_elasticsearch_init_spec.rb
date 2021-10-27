@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'spec_helper'
 
 describe 'elasticsearch', type: 'class' do
@@ -69,7 +71,7 @@ describe 'elasticsearch', type: 'class' do
       # Systemd-specific files
       if test_pid == true
         it {
-          is_expected.to contain_service('elasticsearch').with(
+          expect(subject).to contain_service('elasticsearch').with(
             ensure: 'running',
             enable: true
           )
@@ -84,7 +86,7 @@ describe 'elasticsearch', type: 'class' do
         end
 
         it {
-          is_expected.to contain_class('elasticsearch::config').
+          expect(subject).to contain_class('elasticsearch::config').
             that_requires('Class[java]')
         }
       end
@@ -99,7 +101,7 @@ describe 'elasticsearch', type: 'class' do
             end
 
             it {
-              is_expected.to contain_package('elasticsearch').
+              expect(subject).to contain_package('elasticsearch').
                 with(ensure: "1.0#{version_add}")
             }
           end
@@ -113,7 +115,7 @@ describe 'elasticsearch', type: 'class' do
               end
 
               it {
-                is_expected.to contain_package('elasticsearch').
+                expect(subject).to contain_package('elasticsearch').
                   with(ensure: '1.1-2')
               }
             end
@@ -142,11 +144,12 @@ describe 'elasticsearch', type: 'class' do
 
               unless schema.start_with? 'puppet'
                 it {
-                  is_expected.to contain_exec('create_package_dir_elasticsearch').
+                  expect(subject).to contain_exec('create_package_dir_elasticsearch').
                     with(command: 'mkdir -p /opt/elasticsearch/swdl')
                 }
+
                 it {
-                  is_expected.to contain_file('/opt/elasticsearch/swdl').
+                  expect(subject).to contain_file('/opt/elasticsearch/swdl').
                     with(
                       purge: false,
                       force: false,
@@ -158,7 +161,7 @@ describe 'elasticsearch', type: 'class' do
               case schema
               when 'file:/'
                 it {
-                  is_expected.to contain_file(
+                  expect(subject).to contain_file(
                     "/opt/elasticsearch/swdl/pkg.#{pkg_ext}"
                   ).with(
                     source: "/domain-or-path/pkg.#{pkg_ext}",
@@ -167,7 +170,7 @@ describe 'elasticsearch', type: 'class' do
                 }
               when 'puppet:///'
                 it {
-                  is_expected.to contain_file(
+                  expect(subject).to contain_file(
                     "/opt/elasticsearch/swdl/pkg.#{pkg_ext}"
                   ).with(
                     source: "#{schema}domain-or-path/pkg.#{pkg_ext}",
@@ -184,10 +187,10 @@ describe 'elasticsearch', type: 'class' do
                       )
                     end
 
-                    flag = !verify_certificates ? ' --no-check-certificate' : ''
+                    flag = verify_certificates ? '' : ' --no-check-certificate'
 
                     it {
-                      is_expected.to contain_exec('download_package_elasticsearch').
+                      expect(subject).to contain_exec('download_package_elasticsearch').
                         with(
                           command: "wget#{flag} -O /opt/elasticsearch/swdl/pkg.#{pkg_ext} #{schema}domain-or-path/pkg.#{pkg_ext} 2> /dev/null",
                           require: 'File[/opt/elasticsearch/swdl]'
@@ -198,7 +201,7 @@ describe 'elasticsearch', type: 'class' do
               end
 
               it {
-                is_expected.to contain_package('elasticsearch').
+                expect(subject).to contain_package('elasticsearch').
                   with(
                     ensure: 'present',
                     source: "/opt/elasticsearch/swdl/pkg.#{pkg_ext}",
@@ -217,7 +220,7 @@ describe 'elasticsearch', type: 'class' do
             end
 
             it {
-              is_expected.to contain_exec('download_package_elasticsearch').
+              expect(subject).to contain_exec('download_package_elasticsearch').
                 with(
                   environment: [
                     'use_proxy=yes',
@@ -228,7 +231,7 @@ describe 'elasticsearch', type: 'class' do
             }
           end
         end
-      end # package
+      end
 
       context 'when setting the module to absent' do
         let(:params) do
@@ -240,29 +243,31 @@ describe 'elasticsearch', type: 'class' do
         case facts[:os]['family']
         when 'Suse'
           it {
-            is_expected.to contain_package('elasticsearch').
+            expect(subject).to contain_package('elasticsearch').
               with(ensure: 'absent')
           }
         else
           it {
-            is_expected.to contain_package('elasticsearch').
+            expect(subject).to contain_package('elasticsearch').
               with(ensure: 'purged')
           }
         end
 
         it {
-          is_expected.to contain_service('elasticsearch').
+          expect(subject).to contain_service('elasticsearch').
             with(
               ensure: 'stopped',
               enable: 'false'
             )
         }
+
         it {
-          is_expected.to contain_file('/usr/share/elasticsearch/plugins').
+          expect(subject).to contain_file('/usr/share/elasticsearch/plugins').
             with(ensure: 'absent')
         }
+
         it {
-          is_expected.to contain_file("#{defaults_path}/elasticsearch").
+          expect(subject).to contain_file("#{defaults_path}/elasticsearch").
             with(ensure: 'absent')
         }
       end
@@ -311,12 +316,14 @@ describe 'elasticsearch', type: 'class' do
         it { is_expected.to compile.with_all_deps }
         it { is_expected.to contain_class('elasticsearch') }
         it { is_expected.to contain_class('elasticsearch::package') }
+
         it {
-          is_expected.to contain_class('elasticsearch::config').
+          expect(subject).to contain_class('elasticsearch::config').
             that_requires('Class[elasticsearch::package]')
         }
+
         it {
-          is_expected.to contain_class('elasticsearch::service').
+          expect(subject).to contain_class('elasticsearch::service').
             that_requires('Class[elasticsearch::config]')
         }
 
@@ -332,11 +339,12 @@ describe 'elasticsearch', type: 'class' do
       context 'package installation' do
         describe 'with default package' do
           it {
-            is_expected.to contain_package('elasticsearch').
+            expect(subject).to contain_package('elasticsearch').
               with(ensure: 'present')
           }
+
           it {
-            is_expected.not_to contain_package('my-elasticsearch').
+            expect(subject).not_to contain_package('my-elasticsearch').
               with(ensure: 'present')
           }
         end
@@ -349,11 +357,12 @@ describe 'elasticsearch', type: 'class' do
           end
 
           it {
-            is_expected.to contain_package('elasticsearch').
+            expect(subject).to contain_package('elasticsearch').
               with(ensure: 'present', name: 'my-elasticsearch')
           }
+
           it {
-            is_expected.not_to contain_package('elasticsearch').
+            expect(subject).not_to contain_package('elasticsearch').
               with(ensure: 'present', name: 'elasticsearch')
           }
         end
@@ -366,7 +375,7 @@ describe 'elasticsearch', type: 'class' do
           end
 
           it {
-            is_expected.to contain_package('elasticsearch').
+            expect(subject).to contain_package('elasticsearch').
               with(ensure: 'latest')
           }
         end
@@ -381,19 +390,22 @@ describe 'elasticsearch', type: 'class' do
         end
 
         it {
-          is_expected.to contain_file('/etc/elasticsearch').
+          expect(subject).to contain_file('/etc/elasticsearch').
             with(owner: 'myesuser', group: 'myesgroup')
         }
+
         it {
-          is_expected.to contain_file('/var/log/elasticsearch').
+          expect(subject).to contain_file('/var/log/elasticsearch').
             with(owner: 'myesuser')
         }
+
         it {
-          is_expected.to contain_file('/usr/share/elasticsearch').
+          expect(subject).to contain_file('/usr/share/elasticsearch').
             with(owner: 'myesuser', group: 'myesgroup')
         }
+
         it {
-          is_expected.to contain_file('/var/lib/elasticsearch').
+          expect(subject).to contain_file('/var/lib/elasticsearch').
             with(owner: 'myesuser', group: 'myesgroup')
         }
       end
@@ -412,7 +424,7 @@ describe 'elasticsearch', type: 'class' do
 
         jvm_options.each do |jvm_option|
           it {
-            is_expected.to contain_file_line("jvm_option_#{jvm_option}").
+            expect(subject).to contain_file_line("jvm_option_#{jvm_option}").
               with(
                 ensure: 'present',
                 path: '/etc/elasticsearch/jvm.options',
@@ -431,7 +443,7 @@ describe 'elasticsearch', type: 'class' do
 
         describe 'should restart elasticsearch' do
           it {
-            is_expected.to contain_file('/etc/elasticsearch/elasticsearch.yml').
+            expect(subject).to contain_file('/etc/elasticsearch/elasticsearch.yml').
               that_notifies('Service[elasticsearch]')
           }
         end
@@ -444,7 +456,7 @@ describe 'elasticsearch', type: 'class' do
           end
 
           it {
-            is_expected.to contain_file_line('jvm_option_-Xmx16g').
+            expect(subject).to contain_file_line('jvm_option_-Xmx16g').
               that_notifies('Service[elasticsearch]')
           }
         end
@@ -485,8 +497,9 @@ describe 'elasticsearch', type: 'class' do
             end
 
             it { is_expected.to compile }
+
             it {
-              is_expected.to send(
+              expect(subject).to send(
                 "contain_elasticsearch__#{singular(deftype)}", params.keys.first
               )
             }
@@ -500,7 +513,7 @@ describe 'elasticsearch', type: 'class' do
         end
 
         it do
-          is_expected.to contain_package('elasticsearch').with(
+          expect(subject).to contain_package('elasticsearch').with(
             name: 'elasticsearch-oss'
           )
         end

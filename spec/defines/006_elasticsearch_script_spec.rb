@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'spec_helper'
 
 describe 'elasticsearch::script', type: 'define' do
@@ -44,8 +46,9 @@ describe 'elasticsearch::script', type: 'define' do
         end
 
         it { is_expected.to contain_elasticsearch__script('foo') }
+
         it {
-          is_expected.to contain_file('/usr/share/elasticsearch/scripts/foo.groovy').
+          expect(subject).to contain_file('/usr/share/elasticsearch/scripts/foo.groovy').
             with(
               source: 'puppet:///path/to/foo.groovy',
               ensure: 'present'
@@ -63,8 +66,9 @@ describe 'elasticsearch::script', type: 'define' do
         end
 
         it { is_expected.to contain_elasticsearch__script('foo') }
+
         it {
-          is_expected.to contain_file(
+          expect(subject).to contain_file(
             '/usr/share/elasticsearch/scripts/my_scripts'
           ).with(
             ensure: 'directory',
@@ -83,8 +87,9 @@ describe 'elasticsearch::script', type: 'define' do
         end
 
         it { is_expected.to contain_elasticsearch__script('foo') }
+
         it {
-          is_expected.to contain_file('/usr/share/elasticsearch/scripts/foo.groovy').
+          expect(subject).to contain_file('/usr/share/elasticsearch/scripts/foo.groovy').
             with(
               source: 'puppet:///path/to/foo.groovy',
               ensure: 'absent'

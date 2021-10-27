@@ -1,7 +1,8 @@
+# frozen_string_literal: true
+
 require 'beaker-rspec'
 require 'beaker/puppet_install_helper'
 require 'securerandom'
-require 'thread'
 require 'infrataster/rspec'
 require 'rspec/retry'
 require 'vault'
@@ -174,15 +175,13 @@ hosts.each do |host|
               'rpm'
             end
 
-  if v[:elasticsearch_package]
-    v[:elasticsearch_package].merge!(
-      derive_full_package_url(
-        v[:elasticsearch_full_version], [v[:ext]]
-      ).flat_map do |url, filename|
-        [[:url, url], [:filename, filename], [:path, artifact(filename)]]
-      end.to_h
-    )
-  end
+  v[:elasticsearch_package]&.merge!(
+    derive_full_package_url(
+      v[:elasticsearch_full_version], [v[:ext]]
+    ).flat_map do |url, filename|
+      [[:url, url], [:filename, filename], [:path, artifact(filename)]]
+    end.to_h
+  )
 
   Infrataster::Server.define(:docker) do |server|
     server.address = host[:ip]
@@ -215,7 +214,7 @@ RSpec.configure do |c|
 
       dist_module = {
         'Debian' => ['apt'],
-        'Suse'   => ['zypprepo'],
+        'Suse' => ['zypprepo'],
         'RedHat' => %w[concat yumrepo_core]
       }[fact('os.family')]
 

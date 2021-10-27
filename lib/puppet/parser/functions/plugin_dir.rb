@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # Top-level Puppet functions
 module Puppet::Parser::Functions
   newfunction(

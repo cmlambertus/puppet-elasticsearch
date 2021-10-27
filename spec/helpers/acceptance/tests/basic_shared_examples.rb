@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'json'
 require 'helpers/acceptance/tests/manifest_shared_examples'
 
@@ -6,7 +8,7 @@ shared_examples 'basic acceptance tests' do |es_config|
 
   describe package("elasticsearch#{v[:oss] ? '-oss' : ''}") do
     it {
-      is_expected.to be_installed.
+      expect(subject).to be_installed.
         with_version(v[:elasticsearch_full_version])
     }
   end
@@ -43,7 +45,7 @@ shared_examples 'basic acceptance tests' do |es_config|
       es_port = es_config['http.port']
       describe port(es_port) do
         it 'open', :with_retries do
-          is_expected.to be_listening
+          expect(subject).to be_listening
         end
       end
 

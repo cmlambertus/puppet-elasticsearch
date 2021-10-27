@@ -1,27 +1,28 @@
+# frozen_string_literal: true
+
 require 'spec_helper'
-# rubocop:disable Style/IndentHash
 describe 'concat_merge' do
   describe 'exception handling' do
     it {
-      is_expected.to run.with_params.and_raise_error(
+      expect(subject).to run.with_params.and_raise_error(
         Puppet::ParseError, %r{wrong number of arguments}i
       )
     }
 
     it {
-      is_expected.to run.with_params({}).and_raise_error(
+      expect(subject).to run.with_params({}).and_raise_error(
         Puppet::ParseError, %r{wrong number of arguments}i
       )
     }
 
     it {
-      is_expected.to run.with_params('2', 2).and_raise_error(
+      expect(subject).to run.with_params('2', 2).and_raise_error(
         Puppet::ParseError, %r{unexpected argument type}
       )
     }
 
     it {
-      is_expected.to run.with_params(2, '2').and_raise_error(
+      expect(subject).to run.with_params(2, '2').and_raise_error(
         Puppet::ParseError, %r{unexpected argument type}
       )
     }
@@ -30,146 +31,157 @@ describe 'concat_merge' do
   describe 'collisions' do
     context 'single keys' do
       it {
-        is_expected.to run.with_params({
-        'key1' => 'value1'
-      }, {
-        'key1' => 'value2'
-      }).and_return({
-        'key1' => 'value2'
-      }) }
+        expect(subject).to run.with_params({
+                                             'key1' => 'value1'
+                                           }, {
+                                             'key1' => 'value2'
+                                           }).and_return({
+                                                           'key1' => 'value2'
+                                                         })
+      }
 
       it {
-        is_expected.to run.with_params({
-        'key1' => 'value1'
-      }, {
-        'key1' => 'value2'
-      }, {
-        'key1' => 'value3'
-      }).and_return({
-        'key1' => 'value3'
-      }) }
+        expect(subject).to run.with_params({
+                                             'key1' => 'value1'
+                                           }, {
+                                             'key1' => 'value2'
+                                           }, {
+                                             'key1' => 'value3'
+                                           }).and_return({
+                                                           'key1' => 'value3'
+                                                         })
+      }
     end
 
     context 'multiple keys' do
       it {
-        is_expected.to run.with_params({
-        'key1' => 'value1',
-        'key2' => 'value2'
-      }, {
-        'key1' => 'value2'
-      }).and_return({
-        'key1' => 'value2',
-        'key2' => 'value2'
-      }) }
+        expect(subject).to run.with_params({
+                                             'key1' => 'value1',
+                                             'key2' => 'value2'
+                                           }, {
+                                             'key1' => 'value2'
+                                           }).and_return({
+                                                           'key1' => 'value2',
+                                                           'key2' => 'value2'
+                                                         })
+      }
 
       it {
-        is_expected.to run.with_params({
-        'key1' => 'value1',
-        'key2' => 'value1'
-      }, {
-        'key1' => 'value2'
-      }, {
-        'key1' => 'value3',
-        'key2' => 'value2'
-      }).and_return({
-        'key1' => 'value3',
-        'key2' => 'value2'
-      }) }
+        expect(subject).to run.with_params({
+                                             'key1' => 'value1',
+                                             'key2' => 'value1'
+                                           }, {
+                                             'key1' => 'value2'
+                                           }, {
+                                             'key1' => 'value3',
+                                             'key2' => 'value2'
+                                           }).and_return({
+                                                           'key1' => 'value3',
+                                                           'key2' => 'value2'
+                                                         })
+      }
     end
   end
 
   describe 'concat merging' do
     context 'single keys' do
       it {
-        is_expected.to run.with_params({
-        'key1' => ['value1']
-      }, {
-        'key1' => ['value2']
-      }).and_return({
-        'key1' => %w[value1 value2]
-      }) }
+        expect(subject).to run.with_params({
+                                             'key1' => ['value1']
+                                           }, {
+                                             'key1' => ['value2']
+                                           }).and_return({
+                                                           'key1' => %w[value1 value2]
+                                                         })
+      }
 
       it {
-        is_expected.to run.with_params({
-        'key1' => ['value1']
-      }, {
-        'key1' => ['value2']
-      }, {
-        'key1' => ['value3']
-      }).and_return({
-        'key1' => %w[value1 value2 value3]
-      }) }
+        expect(subject).to run.with_params({
+                                             'key1' => ['value1']
+                                           }, {
+                                             'key1' => ['value2']
+                                           }, {
+                                             'key1' => ['value3']
+                                           }).and_return({
+                                                           'key1' => %w[value1 value2 value3]
+                                                         })
+      }
 
       it {
-        is_expected.to run.with_params({
-        'key1' => ['value1']
-      }, {
-        'key1' => 'value2'
-      }).and_return({
-        'key1' => 'value2'
-      }) }
+        expect(subject).to run.with_params({
+                                             'key1' => ['value1']
+                                           }, {
+                                             'key1' => 'value2'
+                                           }).and_return({
+                                                           'key1' => 'value2'
+                                                         })
+      }
 
       it {
-        is_expected.to run.with_params({
-        'key1' => 'value1'
-      }, {
-        'key1' => ['value2']
-      }).and_return({
-        'key1' => ['value2']
-      }) }
+        expect(subject).to run.with_params({
+                                             'key1' => 'value1'
+                                           }, {
+                                             'key1' => ['value2']
+                                           }).and_return({
+                                                           'key1' => ['value2']
+                                                         })
+      }
     end
 
     context 'multiple keys' do
       it {
-        is_expected.to run.with_params({
-        'key1' => ['value1'],
-        'key2' => ['value3']
-      }, {
-        'key1' => ['value2'],
-        'key2' => ['value4']
-      }).and_return({
-        'key1' => %w[value1 value2],
-        'key2' => %w[value3 value4]
-      }) }
+        expect(subject).to run.with_params({
+                                             'key1' => ['value1'],
+                                             'key2' => ['value3']
+                                           }, {
+                                             'key1' => ['value2'],
+                                             'key2' => ['value4']
+                                           }).and_return({
+                                                           'key1' => %w[value1 value2],
+                                                           'key2' => %w[value3 value4]
+                                                         })
+      }
 
       it {
-        is_expected.to run.with_params({
-        'key1' => ['value1'],
-        'key2' => ['value1.1']
-      }, {
-        'key1' => ['value2'],
-        'key2' => ['value2.1']
-      }, {
-        'key1' => ['value3'],
-        'key2' => ['value3.1']
-      }).and_return({
-        'key1' => %w[value1 value2 value3],
-        'key2' => ['value1.1', 'value2.1', 'value3.1']
-      }) }
+        expect(subject).to run.with_params({
+                                             'key1' => ['value1'],
+                                             'key2' => ['value1.1']
+                                           }, {
+                                             'key1' => ['value2'],
+                                             'key2' => ['value2.1']
+                                           }, {
+                                             'key1' => ['value3'],
+                                             'key2' => ['value3.1']
+                                           }).and_return({
+                                                           'key1' => %w[value1 value2 value3],
+                                                           'key2' => ['value1.1', 'value2.1', 'value3.1']
+                                                         })
+      }
 
       it {
-        is_expected.to run.with_params({
-        'key1' => ['value1'],
-        'key2' => 'value1'
-      }, {
-        'key1' => 'value2',
-        'key2' => ['value2']
-      }).and_return({
-        'key1' => 'value2',
-        'key2' => ['value2']
-      }) }
+        expect(subject).to run.with_params({
+                                             'key1' => ['value1'],
+                                             'key2' => 'value1'
+                                           }, {
+                                             'key1' => 'value2',
+                                             'key2' => ['value2']
+                                           }).and_return({
+                                                           'key1' => 'value2',
+                                                           'key2' => ['value2']
+                                                         })
+      }
 
       it {
-        is_expected.to run.with_params({
-        'key1' => 'value1',
-        'key2' => ['value1']
-      }, {
-        'key1' => ['value2'],
-        'key2' => 'value2'
-      }).and_return(
-        'key1' => ['value2'],
-        'key2' => 'value2'
-      )
+        expect(subject).to run.with_params({
+                                             'key1' => 'value1',
+                                             'key2' => ['value1']
+                                           }, {
+                                             'key1' => ['value2'],
+                                             'key2' => 'value2'
+                                           }).and_return(
+                                             'key1' => ['value2'],
+                                             'key2' => 'value2'
+                                           )
       }
     end
   end

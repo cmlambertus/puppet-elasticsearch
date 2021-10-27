@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'spec_helper'
 
 describe 'elasticsearch', type: 'class' do
@@ -25,7 +27,7 @@ describe 'elasticsearch', type: 'class' do
             let(:facts) { facts.merge(scenario: 'singleindex') }
 
             it {
-              is_expected.to contain_elasticsearch__index('baz').
+              expect(subject).to contain_elasticsearch__index('baz').
                 with(
                   ensure: 'present',
                   settings: {
@@ -35,9 +37,11 @@ describe 'elasticsearch', type: 'class' do
                   }
                 )
             }
+
             it { is_expected.to contain_elasticsearch_index('baz') }
+
             it {
-              is_expected.to contain_es_instance_conn_validator(
+              expect(subject).to contain_es_instance_conn_validator(
                 'baz-index-conn-validator'
               )
             }
@@ -57,20 +61,21 @@ describe 'elasticsearch', type: 'class' do
           it { is_expected.to contain_file('/etc/elasticsearch/elasticsearch.yml') }
           it { is_expected.to contain_datacat('/etc/elasticsearch/elasticsearch.yml') }
           it { is_expected.to contain_datacat_fragment('main_config') }
+
           it {
-            is_expected.to contain_service('elasticsearch').with(
+            expect(subject).to contain_service('elasticsearch').with(
               ensure: 'running',
               enable: true
             )
           }
-        end # of config
+        end
 
         describe 'pipelines' do
           context 'single pipeline' do
             let(:facts) { facts.merge(scenario: 'singlepipeline') }
 
             it {
-              is_expected.to contain_elasticsearch__pipeline('testpipeline').
+              expect(subject).to contain_elasticsearch__pipeline('testpipeline').
                 with(
                   ensure: 'present',
                   content: {
@@ -86,6 +91,7 @@ describe 'elasticsearch', type: 'class' do
                   }
                 )
             }
+
             it { is_expected.to contain_elasticsearch_pipeline('testpipeline') }
           end
 
@@ -101,12 +107,13 @@ describe 'elasticsearch', type: 'class' do
             let(:facts) { facts.merge(scenario: 'singleplugin') }
 
             it {
-              is_expected.to contain_elasticsearch__plugin('mobz/elasticsearch-head').
+              expect(subject).to contain_elasticsearch__plugin('mobz/elasticsearch-head').
                 with(
                   ensure: 'present',
                   module_dir: 'head'
                 )
             }
+
             it { is_expected.to contain_elasticsearch_plugin('mobz/elasticsearch-head') }
           end
 
@@ -114,7 +121,7 @@ describe 'elasticsearch', type: 'class' do
             let(:facts) { facts.merge(scenario: '') }
 
             it {
-              is_expected.not_to contain_elasticsearch__plugin(
+              expect(subject).not_to contain_elasticsearch__plugin(
                 'mobz/elasticsearch-head/1.0.0'
               )
             }
@@ -129,7 +136,7 @@ describe 'elasticsearch', type: 'class' do
             end
 
             it {
-              is_expected.to contain_elasticsearch__role('admin').
+              expect(subject).to contain_elasticsearch__role('admin').
                 with(
                   ensure: 'present',
                   privileges: {
@@ -143,6 +150,7 @@ describe 'elasticsearch', type: 'class' do
                   ]
                 )
             }
+
             it { is_expected.to contain_elasticsearch_role('admin') }
             it { is_expected.to contain_elasticsearch_role_mapping('admin') }
           end
@@ -159,12 +167,13 @@ describe 'elasticsearch', type: 'class' do
             let(:facts) { facts.merge(scenario: 'singlescript') }
 
             it {
-              is_expected.to contain_elasticsearch__script('myscript').
+              expect(subject).to contain_elasticsearch__script('myscript').
                 with(
                   ensure: 'present',
                   source: 'puppet:///file/here'
                 )
             }
+
             it { is_expected.to contain_file('/usr/share/elasticsearch/scripts/here') }
           end
 
@@ -180,7 +189,7 @@ describe 'elasticsearch', type: 'class' do
             let(:facts) { facts.merge(scenario: 'singletemplate') }
 
             it {
-              is_expected.to contain_elasticsearch__template('foo').
+              expect(subject).to contain_elasticsearch__template('foo').
                 with(
                   ensure: 'present',
                   content: {
@@ -193,6 +202,7 @@ describe 'elasticsearch', type: 'class' do
                   }
                 )
             }
+
             it { is_expected.to contain_elasticsearch_template('foo') }
           end
 
@@ -211,13 +221,14 @@ describe 'elasticsearch', type: 'class' do
             end
 
             it {
-              is_expected.to contain_elasticsearch__user('elastic').
+              expect(subject).to contain_elasticsearch__user('elastic').
                 with(
                   ensure: 'present',
                   roles: ['admin'],
                   password: 'password'
                 )
             }
+
             it { is_expected.to contain_elasticsearch_user('elastic') }
           end
 

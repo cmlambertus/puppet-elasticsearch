@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'puppet/parameter/boolean'
 
 # Provides common properties and parameters for REST-based Elasticsearch types
@@ -16,9 +18,7 @@ module ElasticsearchRESTResource
       defaultto 'localhost'
 
       validate do |value|
-        unless value.is_a? String
-          raise Puppet::Error, 'invalid parameter, expected string'
-        end
+        raise Puppet::Error, 'invalid parameter, expected string' unless value.is_a? String
       end
     end
 
@@ -31,9 +31,10 @@ module ElasticsearchRESTResource
       defaultto 9200
 
       munge do |value|
-        if value.is_a? String
+        case value
+        when String
           value.to_i
-        elsif value.is_a? Integer
+        when Integer
           value
         else
           raise Puppet::Error, "unknown '#{value}' timeout type #{value.class}"
@@ -44,7 +45,7 @@ module ElasticsearchRESTResource
         raise Puppet::Error, "invalid port value '#{value}'" \
           unless value.to_s =~ %r{^([0-9]+)$}
         raise Puppet::Error, "invalid port value '#{value}'" \
-          unless (Regexp.last_match[0].to_i > 0) \
+          unless Regexp.last_match[0].to_i.positive? \
             && (Regexp.last_match[0].to_i < 65_535)
       end
     end
@@ -59,9 +60,10 @@ module ElasticsearchRESTResource
       defaultto 10
 
       munge do |value|
-        if value.is_a? String
+        case value
+        when String
           value.to_i
-        elsif value.is_a? Integer
+        when Integer
           value
         else
           raise Puppet::Error, "unknown '#{value}' timeout type #{value.class}"
@@ -69,9 +71,7 @@ module ElasticsearchRESTResource
       end
 
       validate do |value|
-        if value.to_s !~ %r{^\d+$}
-          raise Puppet::Error, 'timeout must be a positive integer'
-        end
+        raise Puppet::Error, 'timeout must be a positive integer' if value.to_s !~ %r{^\d+$}
       end
     end
 
@@ -88,4 +88,4 @@ module ElasticsearchRESTResource
       defaultto true
     end
   end
-end # of newtype
+end

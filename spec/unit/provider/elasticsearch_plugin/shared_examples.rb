@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'spec_helper_rspec'
 
 shared_examples 'plugin provider' do |version|
@@ -11,17 +13,13 @@ shared_examples 'plugin provider' do |version|
       it 'installs with default parameters' do
         allow(provider).to receive(:plugin).with(
           ['install', resource_name].tap do |args|
-            if Puppet::Util::Package.versioncmp(version, '2.2.0') >= 0
-              args.insert 1, '--batch'
-            end
+            args.insert 1, '--batch' if Puppet::Util::Package.versioncmp(version, '2.2.0') >= 0
           end
         )
         provider.create
         expect(provider).to have_received(:plugin).with(
           ['install', resource_name].tap do |args|
-            if Puppet::Util::Package.versioncmp(version, '2.2.0') >= 0
-              args.insert 1, '--batch'
-            end
+            args.insert 1, '--batch' if Puppet::Util::Package.versioncmp(version, '2.2.0') >= 0
           end
         )
       end
@@ -32,9 +30,7 @@ shared_examples 'plugin provider' do |version|
           ['install'] + ['http://url/to/my/plugin.zip'].tap do |args|
             args.unshift('kopf', '--url') if version.start_with? '1'
 
-            if Puppet::Util::Package.versioncmp(version, '2.2.0') >= 0
-              args.unshift '--batch'
-            end
+            args.unshift '--batch' if Puppet::Util::Package.versioncmp(version, '2.2.0') >= 0
 
             args
           end
@@ -44,9 +40,7 @@ shared_examples 'plugin provider' do |version|
           ['install'] + ['http://url/to/my/plugin.zip'].tap do |args|
             args.unshift('kopf', '--url') if version.start_with? '1'
 
-            if Puppet::Util::Package.versioncmp(version, '2.2.0') >= 0
-              args.unshift '--batch'
-            end
+            args.unshift '--batch' if Puppet::Util::Package.versioncmp(version, '2.2.0') >= 0
 
             args
           end
@@ -59,9 +53,7 @@ shared_examples 'plugin provider' do |version|
           ['install'] + ['file:///tmp/plugin.zip'].tap do |args|
             args.unshift('kopf', '--url') if version.start_with? '1'
 
-            if Puppet::Util::Package.versioncmp(version, '2.2.0') >= 0
-              args.unshift '--batch'
-            end
+            args.unshift '--batch' if Puppet::Util::Package.versioncmp(version, '2.2.0') >= 0
 
             args
           end
@@ -71,9 +63,7 @@ shared_examples 'plugin provider' do |version|
           ['install'] + ['file:///tmp/plugin.zip'].tap do |args|
             args.unshift('kopf', '--url') if version.start_with? '1'
 
-            if Puppet::Util::Package.versioncmp(version, '2.2.0') >= 0
-              args.unshift '--batch'
-            end
+            args.unshift '--batch' if Puppet::Util::Package.versioncmp(version, '2.2.0') >= 0
 
             args
           end
@@ -152,7 +142,7 @@ shared_examples 'plugin provider' do |version|
           end).to eq('/etc/elasticsearch')
         end
       end
-    end # of setup
+    end
 
     describe 'java_opts' do
       it 'uses authentication credentials' do

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'json'
 require 'helpers/acceptance/tests/manifest_shared_examples'
 require 'helpers/acceptance/tests/bad_manifest_shared_examples'
@@ -37,7 +39,7 @@ shared_examples 'template content' do |es_config, template|
   elasticsearch_port = es_config['http.port']
   describe port(elasticsearch_port) do
     it 'open', :with_retries do
-      is_expected.to be_listening
+      expect(subject).to be_listening
     end
   end
 

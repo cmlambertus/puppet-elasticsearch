@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'puppet/provider/elastic_yaml'
 
 Puppet::Type.type(:elasticsearch_role_mapping).provide(

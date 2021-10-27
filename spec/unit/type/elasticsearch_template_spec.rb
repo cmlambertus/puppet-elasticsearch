@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require_relative '../../helpers/unit/type/elasticsearch_rest_shared_examples'
 
 describe Puppet::Type.type(:elasticsearch_template) do
@@ -94,7 +96,7 @@ describe Puppet::Type.type(:elasticsearch_template) do
         )
       end
     end
-  end # of describing when validing values
+  end
 
   describe 'insync?' do
     # Although users can pass the type a hash structure with any sort of values
@@ -131,4 +133,4 @@ describe Puppet::Type.type(:elasticsearch_template) do
       expect(is_template).to be_insync(should_template)
     end
   end
-end # of describe Puppet::Type
+end

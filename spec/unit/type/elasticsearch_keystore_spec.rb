@@ -1,17 +1,19 @@
+# frozen_string_literal: true
+
 require 'spec_helper_rspec'
 
 describe Puppet::Type.type(:elasticsearch_keystore) do
   let(:resource_name) { 'es-01' }
 
   describe 'validating attributes' do
-    [:configdir, :instance, :purge].each do |param|
-      it "should have a `#{param}` parameter" do
+    %i[configdir instance purge].each do |param|
+      it "has a `#{param}` parameter" do
         expect(described_class.attrtype(param)).to eq(:param)
       end
     end
 
-    [:ensure, :settings].each do |prop|
-      it "should have a #{prop} property" do
+    %i[ensure settings].each do |prop|
+      it "has a #{prop} property" do
         expect(described_class.attrtype(prop)).to eq(:property)
       end
     end
@@ -21,7 +23,7 @@ describe Puppet::Type.type(:elasticsearch_keystore) do
         expect(described_class.key_attributes).to eq([:instance])
       end
     end
-  end # of describe validating attributes
+  end
 
   describe 'when validating values' do
     describe 'ensure' do
@@ -97,5 +99,5 @@ describe Puppet::Type.type(:elasticsearch_keystore) do
         end
       end
     end
-  end # of describing when validating values
-end # of describe Puppet::Type
+  end
+end

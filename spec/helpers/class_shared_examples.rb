@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 shared_examples 'class' do
   it { is_expected.to compile.with_all_deps }
   it { is_expected.to contain_augeas('/etc/sysconfig/elasticsearch') }

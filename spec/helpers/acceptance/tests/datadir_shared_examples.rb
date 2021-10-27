@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'json'
 require 'helpers/acceptance/tests/manifest_shared_examples'
 
@@ -6,6 +8,7 @@ shared_examples 'datadir directory validation' do |es_config, datapaths|
 
   describe file('/etc/elasticsearch/elasticsearch.yml') do
     it { is_expected.to be_file }
+
     datapaths.each do |datapath|
       it { is_expected.to contain datapath }
     end
@@ -20,7 +23,7 @@ shared_examples 'datadir directory validation' do |es_config, datapaths|
   es_port = es_config['http.port']
   describe port(es_port) do
     it 'open', :with_retries do
-      is_expected.to be_listening
+      expect(subject).to be_listening
     end
   end
 

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 shared_examples 'invalid manifest application' do
   context 'bad manifest' do
     let(:applied_manifest) do

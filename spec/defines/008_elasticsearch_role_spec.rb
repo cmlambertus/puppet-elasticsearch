@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'spec_helper'
 
 describe 'elasticsearch::role' do
@@ -50,8 +52,9 @@ describe 'elasticsearch::role' do
       context 'with default parameters' do
         it { is_expected.to contain_elasticsearch__role('elastic_role') }
         it { is_expected.to contain_elasticsearch_role('elastic_role') }
+
         it do
-          is_expected.to contain_elasticsearch_role_mapping('elastic_role').with(
+          expect(subject).to contain_elasticsearch_role_mapping('elastic_role').with(
             'ensure' => 'present',
             'mappings' => [
               'cn=users,dc=example,dc=com',
@@ -76,7 +79,7 @@ describe 'elasticsearch::role' do
           end
 
           it {
-            is_expected.to contain_elasticsearch__role('elastic_role').
+            expect(subject).to contain_elasticsearch__role('elastic_role').
               that_comes_before([
                                   'Elasticsearch::Template[foo]',
                                   'Elasticsearch::User[elastic]'

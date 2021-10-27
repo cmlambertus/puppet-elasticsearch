@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'spec_helper'
 
 describe 'elasticsearch::user' do
@@ -36,10 +38,11 @@ describe 'elasticsearch::user' do
 
         it { is_expected.to contain_elasticsearch__user('elastic') }
         it { is_expected.to contain_elasticsearch_user('elastic') }
+
         it do
-          is_expected.to contain_elasticsearch_user_roles('elastic').with(
+          expect(subject).to contain_elasticsearch_user_roles('elastic').with(
             'ensure' => 'present',
-            'roles'  => %w[monitor user]
+            'roles' => %w[monitor user]
           )
         end
       end
@@ -71,8 +74,9 @@ describe 'elasticsearch::user' do
           it { is_expected.to contain_elasticsearch__role('test_role') }
           it { is_expected.to contain_elasticsearch_role('test_role') }
           it { is_expected.to contain_elasticsearch_role_mapping('test_role') }
+
           it {
-            is_expected.to contain_elasticsearch__user('elastic').
+            expect(subject).to contain_elasticsearch__user('elastic').
               that_comes_before([
                                   'Elasticsearch::Template[foo]'
                                 ]).that_requires([
@@ -109,8 +113,9 @@ describe 'elasticsearch::user' do
           it { is_expected.to contain_elasticsearch__role('test_role') }
           it { is_expected.to contain_elasticsearch_role('test_role') }
           it { is_expected.to contain_elasticsearch_role_mapping('test_role') }
+
           it {
-            is_expected.to contain_elasticsearch__user('elastic').
+            expect(subject).to contain_elasticsearch__user('elastic').
               that_comes_before([
                                   'Elasticsearch::Template[foo]'
                                 ]).that_requires([

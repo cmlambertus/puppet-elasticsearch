@@ -1,21 +1,23 @@
+# frozen_string_literal: true
+
 require 'spec_helper_rspec'
 
-[
-  :elasticsearch_user,
-  :elasticsearch_user_file
+%i[
+  elasticsearch_user
+  elasticsearch_user_file
 ].each do |described_type|
   describe Puppet::Type.type(described_type) do
     let(:resource_name) { 'elastic' }
 
     describe 'when validating attributes' do
-      [:name, :configdir].each do |param|
-        it "should have a #{param} parameter" do
+      %i[name configdir].each do |param|
+        it "has a #{param} parameter" do
           expect(described_class.attrtype(param)).to eq(:param)
         end
       end
 
       [:ensure].each do |prop|
-        it "should have a #{prop} property" do
+        it "has a #{prop} property" do
           expect(described_class.attrtype(prop)).to eq(:property)
         end
       end
@@ -25,7 +27,7 @@ require 'spec_helper_rspec'
           expect(described_class.key_attributes).to eq([:name])
         end
       end
-    end # of describe when validating attributes
+    end
 
     describe 'when validating values' do
       describe 'ensure' do
@@ -64,12 +66,13 @@ require 'spec_helper_rspec'
         next unless described_class.respond_to? attribute
 
         describe attribute.to_s do
-          it "should have a #{attrtype} #{type}" do
+          it "has a #{attrtype} #{type}" do
             expect(described_class.attrtype(attribute)).to eq(type)
           end
         end
 
         next unless attribute == :password
+
         it 'rejects short passwords' do
           expect do
             described_class.new(
@@ -79,6 +82,6 @@ require 'spec_helper_rspec'
           end.to raise_error(Puppet::Error, %r{must be at least})
         end
       end
-    end # of describing when validing values
-  end # of describe Puppet::Type
+    end
+  end
 end

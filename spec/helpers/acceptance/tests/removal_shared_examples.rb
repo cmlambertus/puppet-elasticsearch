@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 shared_examples 'module removal' do |es_config|
   describe 'uninstalling' do
     let(:manifest) do
@@ -22,7 +24,7 @@ shared_examples 'module removal' do |es_config|
     unless es_config.empty?
       describe port(es_config['http.port']) do
         it 'closed' do
-          is_expected.not_to be_listening
+          expect(subject).not_to be_listening
         end
       end
     end

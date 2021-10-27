@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'puppet/provider/elastic_rest'
 
 Puppet::Type.type(:elasticsearch_license).provide(
@@ -21,9 +23,9 @@ Puppet::Type.type(:elasticsearch_license).provide(
   def self.process_body(body)
     JSON.parse(body).map do |_object_name, api_object|
       {
-        :name     => name.to_s,
-        :ensure   => :present,
-        metadata  => { 'license' => process_metadata(api_object) },
+        :name => name.to_s,
+        :ensure => :present,
+        metadata => { 'license' => process_metadata(api_object) },
         :provider => name
       }
     end

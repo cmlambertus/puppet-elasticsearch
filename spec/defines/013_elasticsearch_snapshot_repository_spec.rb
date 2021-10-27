@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'spec_helper'
 
 describe 'elasticsearch::snapshot_repository', type: 'define' do
@@ -24,7 +26,7 @@ describe 'elasticsearch::snapshot_repository', type: 'define' do
       end
 
       describe 'parameter validation' do
-        [:api_ca_file, :api_ca_path].each do |param|
+        %i[api_ca_file api_ca_path].each do |param|
           let :params do
             {
               :ensure => 'present',
@@ -34,7 +36,7 @@ describe 'elasticsearch::snapshot_repository', type: 'define' do
           end
 
           it 'validates cert paths' do
-            is_expected.to compile.and_raise_error(%r{expects a})
+            expect(subject).to compile.and_raise_error(%r{expects a})
           end
         end
 
@@ -61,12 +63,14 @@ describe 'elasticsearch::snapshot_repository', type: 'define' do
         end
 
         it { is_expected.to contain_elasticsearch__snapshot_repository('backup') }
+
         it do
-          is_expected.to contain_es_instance_conn_validator('backup-snapshot').
+          expect(subject).to contain_es_instance_conn_validator('backup-snapshot').
             that_comes_before('Elasticsearch_snapshot_repository[backup]')
         end
+
         it 'passes through parameters' do
-          is_expected.to contain_elasticsearch_snapshot_repository('backup').with(
+          expect(subject).to contain_elasticsearch_snapshot_repository('backup').with(
             ensure: 'present',
             location: '/var/lib/elasticsearch/backup',
             protocol: 'https',
@@ -104,7 +108,7 @@ describe 'elasticsearch::snapshot_repository', type: 'define' do
         end
 
         it do
-          is_expected.to contain_elasticsearch_snapshot_repository('backup').with(
+          expect(subject).to contain_elasticsearch_snapshot_repository('backup').with(
             ensure: 'present',
             location: '/var/lib/elasticsearch/backup',
             protocol: 'https',
@@ -129,7 +133,7 @@ describe 'elasticsearch::snapshot_repository', type: 'define' do
         end
 
         it 'removes snapshot repository' do
-          is_expected.to contain_elasticsearch_snapshot_repository('backup').with(ensure: 'absent')
+          expect(subject).to contain_elasticsearch_snapshot_repository('backup').with(ensure: 'absent')
         end
       end
     end

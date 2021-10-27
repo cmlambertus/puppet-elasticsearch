@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'net/http'
 require 'json'
 require 'yaml'
@@ -27,13 +29,13 @@ module EsFacts
 
     return false, false if !config[enabled].nil? && config[enabled] == 'false'
     return config[httpport], ssl?(config) unless config[httpport].nil?
+
     ['9200', ssl?(config)]
   end
 
   # Entrypoint for custom fact populator
   #
   # This is a super old function but works; disable a bunch of checks.
-  # rubocop:disable Lint/HandleExceptions
   def self.run
     dir_prefix = '/etc/elasticsearch'
     # httpports is a hash of port_number => ssl?
@@ -105,21 +107,21 @@ module EsFacts
           transportports << nodes_data['settings']['transport']['tcp']['port'] unless nodes_data['settings']['transport']['tcp'].nil? || nodes_data['settings']['transport']['tcp']['port'].nil?
 
           node = {
-            'http_ports'                  => httpports.keys,
-            'transport_ports'             => transportports,
-            'http_bound_addresses'        => http_bound_addresses,
-            'transport_bound_addresses'   => transport_bound_addresses,
+            'http_ports' => httpports.keys,
+            'transport_ports' => transportports,
+            'http_bound_addresses' => http_bound_addresses,
+            'transport_bound_addresses' => transport_bound_addresses,
             'transport_publish_addresses' => transport_publish_addresses,
-            json_data['name']             => {
-              'settings'  => nodes_data['settings'],
-              'http'      => nodes_data['http'],
+            json_data['name'] => {
+              'settings' => nodes_data['settings'],
+              'http' => nodes_data['http'],
               'transport' => nodes_data['transport']
             }
           }
           nodes.merge! node
         end
       end
-    rescue
+    rescue StandardError
     end
     Facter.add(:elasticsearch) do
       setcode do
@@ -128,8 +130,6 @@ module EsFacts
       nodes unless nodes.empty?
     end
   end
-  # rubocop:enable Metrics/CyclomaticComplexity
-  # rubocop:enable Metrics/PerceivedComplexity
 end
 
 EsFacts.run

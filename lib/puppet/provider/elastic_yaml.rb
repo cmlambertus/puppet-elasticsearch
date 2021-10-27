@@ -1,4 +1,5 @@
-# -*- coding: utf-8 -*-
+# frozen_string_literal: true
+
 $LOAD_PATH.unshift(File.join(File.dirname(__FILE__), '..', '..'))
 
 require 'puppet/provider/elastic_parsedfile'
@@ -33,7 +34,7 @@ class Puppet::Provider::ElasticYaml < Puppet::Provider::ElasticParsedFile
   def self.to_file(records)
     yaml = records.map do |record|
       # Convert top-level symbols to strings
-      Hash[record.map { |k, v| [k.to_s, v] }]
+      record.transform_keys(&:to_s)
     end
     yaml = yaml.reduce({}) do |hash, record|
       # Flatten array of hashes into single hash

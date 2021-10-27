@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 Puppet::Type.newtype(:elasticsearch_role_mapping) do
   desc 'Type to model Elasticsearch role mappings.'
 

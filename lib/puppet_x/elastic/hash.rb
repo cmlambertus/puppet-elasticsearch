@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # Custom extensions namespace
 module Puppet_X # rubocop:disable Style/ClassAndModuleCamelCase
   # Elastic helpers
@@ -15,9 +17,10 @@ module Puppet_X # rubocop:disable Style/ClassAndModuleCamelCase
           tmp = base.to_a.sort
           base.clear
           tmp.each do |key, val|
-            if val.is_a? base.class
+            case val
+            when base.class
               val.extend Puppet_X::Elastic::SortedHash
-            elsif val.is_a? Array
+            when Array
               val.map do |elem|
                 if elem.is_a? base.class
                   elem.extend(Puppet_X::Elastic::SortedHash)
@@ -56,13 +59,12 @@ module Puppet_X # rubocop:disable Style/ClassAndModuleCamelCase
           end
         end
       end
-      # rubocop:enable Metrics/CyclomaticComplexity
-      # rubocop:enable Metrics/PerceivedComplexity
 
       # Override each_pair with a method that yields key/values in
       # sorted order.
       def each_pair
         return to_enum(:each_pair) unless block_given?
+
         keys.sort.each do |key|
           yield key, self[key]
         end

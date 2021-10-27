@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 shared_examples 'manifest application' do |idempotency_check = true|
   context 'manifest' do
     let(:applied_manifest) do

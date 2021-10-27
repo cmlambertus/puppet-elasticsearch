@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'spec_helper_rspec'
 
 shared_examples 'keystore instance' do |instance|
@@ -6,6 +8,7 @@ shared_examples 'keystore instance' do |instance|
 
     it { expect(subject).to be_exists }
     it { expect(subject.name).to eq(instance) }
+
     it {
       expect(subject.settings).
         to eq(['node.name', 'cloud.aws.access_key'])
@@ -81,17 +84,19 @@ describe Puppet::Type.type(:elasticsearch_keystore).provider(:elasticsearch_keys
       let(:instances) { ['es-01'] }
 
       it { expect(described_class.instances.length).to eq(instances.length) }
+
       include_examples 'keystore instance', 'es-01'
     end
 
     context 'with multiple instances' do
-      let(:instances) { ['es-01', 'es-02'] }
+      let(:instances) { %w[es-01 es-02] }
 
       it { expect(described_class.instances.length).to eq(instances.length) }
+
       include_examples 'keystore instance', 'es-01'
       include_examples 'keystore instance', 'es-02'
     end
-  end # of describe instances
+  end
 
   describe 'prefetch' do
     it 'has a prefetch method' do
@@ -183,5 +188,5 @@ describe Puppet::Type.type(:elasticsearch_keystore).provider(:elasticsearch_keys
         )
       end
     end
-  end # of describe flush
-end # of describe Puppet::Type elasticsearch_keystore
+  end
+end

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 Puppet::Type.newtype(:elasticsearch_plugin) do
   @doc = 'Plugin installation type'
 

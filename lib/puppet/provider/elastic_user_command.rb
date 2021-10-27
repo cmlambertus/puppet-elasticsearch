@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # Parent provider for Elasticsearch Shield/X-Pack file-based user management
 # tools.
 class Puppet::Provider::ElasticUserCommand < Puppet::Provider

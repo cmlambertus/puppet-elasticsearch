@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'spec_helper_rspec'
 
 describe Puppet::Type.type(:elasticsearch_user_roles) do
@@ -5,13 +7,13 @@ describe Puppet::Type.type(:elasticsearch_user_roles) do
 
   describe 'when validating attributes' do
     [:name].each do |param|
-      it "should have a #{param} parameter" do
+      it "has a #{param} parameter" do
         expect(described_class.attrtype(param)).to eq(:param)
       end
     end
 
-    [:ensure, :roles].each do |prop|
-      it "should have a #{prop} property" do
+    %i[ensure roles].each do |prop|
+      it "has a #{prop} property" do
         expect(described_class.attrtype(prop)).to eq(:property)
       end
     end
@@ -21,7 +23,7 @@ describe Puppet::Type.type(:elasticsearch_user_roles) do
         expect(described_class.key_attributes).to eq([:name])
       end
     end
-  end # of describe when validating attributes
+  end
 
   describe 'when validating values' do
     describe 'ensure' do
@@ -52,5 +54,5 @@ describe Puppet::Type.type(:elasticsearch_user_roles) do
         end.to raise_error(Puppet::Error, %r{Invalid value})
       end
     end
-  end # of describing when validing values
-end # of describe Puppet::Type
+  end
+end

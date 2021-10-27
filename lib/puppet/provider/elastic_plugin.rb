@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 $LOAD_PATH.unshift(File.join(File.dirname(__FILE__), '..', '..'))
 
 require 'uri'
@@ -40,7 +42,7 @@ class Puppet::Provider::ElasticPlugin < Puppet::Provider
       # in one. Therefore, we need to find the first "sub" plugin that
       # indicates which version of x-pack this is.
       properties = properties_files.sort.map do |prop_file|
-        lines = IO.readlines(prop_file).map(&:strip).reject do |line|
+        lines = File.readlines(prop_file).map(&:strip).reject do |line|
           line.start_with?('#') || line.empty?
         end
         lines = lines.map do |property|
@@ -93,7 +95,7 @@ class Puppet::Provider::ElasticPlugin < Puppet::Provider
   def proxy_args(url)
     parsed = URI(url)
     %w[http https].map do |schema|
-      [:host, :port, :user, :password].map do |param|
+      %i[host port user password].map do |param|
         option = parsed.send(param)
         "-D#{schema}.proxy#{param.to_s.capitalize}=#{option}" unless option.nil?
       end

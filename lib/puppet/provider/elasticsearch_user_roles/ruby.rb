@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'puppet/provider/elastic_user_roles'
 
 Puppet::Type.type(:elasticsearch_user_roles).provide(

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'json'
 require 'helpers/acceptance/tests/basic_shared_examples'
 

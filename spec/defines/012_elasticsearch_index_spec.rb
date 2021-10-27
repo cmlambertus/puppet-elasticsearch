@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'spec_helper'
 
 describe 'elasticsearch::index', type: 'define' do
@@ -24,7 +26,7 @@ describe 'elasticsearch::index', type: 'define' do
       end
 
       describe 'parameter validation' do
-        [:api_ca_file, :api_ca_path].each do |param|
+        %i[api_ca_file api_ca_path].each do |param|
           let :params do
             {
               :ensure => 'present',
@@ -33,7 +35,7 @@ describe 'elasticsearch::index', type: 'define' do
           end
 
           it 'validates cert paths' do
-            is_expected.to compile.and_raise_error(%r{expects a})
+            expect(subject).to compile.and_raise_error(%r{expects a})
           end
         end
 
@@ -67,11 +69,11 @@ describe 'elasticsearch::index', type: 'define' do
         end
 
         it do
-          is_expected.to contain_elasticsearch__index(title)
-          is_expected.to contain_es_instance_conn_validator(
+          expect(subject).to contain_elasticsearch__index(title)
+          expect(subject).to contain_es_instance_conn_validator(
             "#{title}-index-conn-validator"
           ).that_comes_before("elasticsearch_index[#{title}]")
-          is_expected.to contain_elasticsearch_index(title).with(
+          expect(subject).to contain_elasticsearch_index(title).with(
             ensure: 'present',
             settings: {},
             protocol: 'https',
@@ -95,7 +97,7 @@ describe 'elasticsearch::index', type: 'define' do
         end
 
         it 'removes indices' do
-          is_expected.to contain_elasticsearch_index(title).with(ensure: 'absent')
+          expect(subject).to contain_elasticsearch_index(title).with(ensure: 'absent')
         end
       end
     end

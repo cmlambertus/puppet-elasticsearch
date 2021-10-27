@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Puppet_X # rubocop:disable Style/ClassAndModuleCamelCase
   # Custom Elastic functions
   module Elastic
@@ -20,5 +22,5 @@ module Puppet_X # rubocop:disable Style/ClassAndModuleCamelCase
         end
       end
     end
-  end # of Elastic
-end # of Puppet_X
+  end
+end

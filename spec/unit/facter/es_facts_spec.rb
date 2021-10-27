@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'spec_helper'
 require 'webmock/rspec'
 
@@ -102,6 +104,6 @@ describe 'elasticsearch facts' do
         expect(Facter.fact(:elasticsearch_plugin_kopf_site).value).
           to be_truthy
       end
-    end # of describe plugin
-  end # of describe instance
-end # of describe elasticsearch facts
+    end
+  end
+end

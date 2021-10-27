@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'json'
 require 'spec_helper_rspec'
 require 'webmock/rspec'
@@ -103,4 +105,4 @@ shared_examples 'REST API' do |resource_type, create_uri, singleton = false|
       end
     end
   end
-end # of describe puppet type
+end

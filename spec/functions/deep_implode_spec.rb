@@ -1,21 +1,22 @@
+# frozen_string_literal: true
+
 require 'spec_helper'
-# rubocop:disable Style/IndentHash
 describe 'deep_implode' do
   describe 'exception handling' do
     it {
-      is_expected.to run.with_params.and_raise_error(
+      expect(subject).to run.with_params.and_raise_error(
         Puppet::ParseError, %r{wrong number of arguments}i
       )
     }
 
     it {
-      is_expected.to run.with_params({}, {}).and_raise_error(
+      expect(subject).to run.with_params({}, {}).and_raise_error(
         Puppet::ParseError, %r{wrong number of arguments}i
       )
     }
 
     it {
-      is_expected.to run.with_params('2').and_raise_error(
+      expect(subject).to run.with_params('2').and_raise_error(
         Puppet::ParseError, %r{unexpected argument type}
       )
     }
@@ -26,92 +27,101 @@ describe 'deep_implode' do
       it { is_expected.to run.with_params({}).and_return({}) }
 
       it {
-        is_expected.to run.with_params({
-        'key' => value
-      }).and_return({
-        'key' => value
-      }) }
+        expect(subject).to run.with_params({
+                                             'key' => value
+                                           }).and_return({
+                                                           'key' => value
+                                                         })
+      }
 
       it {
-        is_expected.to run.with_params({
-        'key' => { 'subkey' => value }
-      }).and_return({
-        'key.subkey' => value
-      }) }
+        expect(subject).to run.with_params({
+                                             'key' => { 'subkey' => value }
+                                           }).and_return({
+                                                           'key.subkey' => value
+                                                         })
+      }
 
       it {
-        is_expected.to run.with_params({
-        'key' => { 'subkey' => { 'subsubkey' => { 'bottom' => value } } }
-      }).and_return({
-        'key.subkey.subsubkey.bottom' => value
-      }) }
+        expect(subject).to run.with_params({
+                                             'key' => { 'subkey' => { 'subsubkey' => { 'bottom' => value } } }
+                                           }).and_return({
+                                                           'key.subkey.subsubkey.bottom' => value
+                                                         })
+      }
     end
   end
 
   # The preferred behavior is to favor fully-qualified keys
   describe 'key collisions' do
     it {
-      is_expected.to run.with_params({
-      'key1' => {
-        'subkey1' => 'value1'
-      },
-      'key1.subkey1' => 'value2'
-    }).and_return({
-      'key1.subkey1' => 'value2'
-    }) }
+      expect(subject).to run.with_params({
+                                           'key1' => {
+                                             'subkey1' => 'value1'
+                                           },
+                                           'key1.subkey1' => 'value2'
+                                         }).and_return({
+                                                         'key1.subkey1' => 'value2'
+                                                       })
+    }
 
     it {
-      is_expected.to run.with_params({
-      'key1.subkey1' => 'value2',
-      'key1' => {
-        'subkey1' => 'value1'
-      }
-    }).and_return({
-      'key1.subkey1' => 'value2'
-    }) }
+      expect(subject).to run.with_params({
+                                           'key1.subkey1' => 'value2',
+                                           'key1' => {
+                                             'subkey1' => 'value1'
+                                           }
+                                         }).and_return({
+                                                         'key1.subkey1' => 'value2'
+                                                       })
+    }
   end
 
   describe 'deep merging' do
     it {
-      is_expected.to run.with_params({
-      'key1' => {
-        'subkey1' => ['value1']
-      },
-      'key1.subkey1' => ['value2']
-    }).and_return({
-      'key1.subkey1' => %w[value2 value1]
-    }) }
+      expect(subject).to run.with_params({
+                                           'key1' => {
+                                             'subkey1' => ['value1']
+                                           },
+                                           'key1.subkey1' => ['value2']
+                                         }).and_return({
+                                                         'key1.subkey1' => %w[value2 value1]
+                                                       })
+    }
 
     it {
-      is_expected.to run.with_params({
-      'key1' => {
-        'subkey1' => { 'key2' => 'value1' }
-      },
-      'key1.subkey1' => { 'key3' => 'value2' }
-    }).and_return({
-      'key1.subkey1.key2' => 'value1',
-      'key1.subkey1.key3' => 'value2'
-    }) }
+      expect(subject).to run.with_params({
+                                           'key1' => {
+                                             'subkey1' => { 'key2' => 'value1' }
+                                           },
+                                           'key1.subkey1' => { 'key3' => 'value2' }
+                                         }).and_return({
+                                                         'key1.subkey1.key2' => 'value1',
+                                                         'key1.subkey1.key3' => 'value2'
+                                                       })
+    }
 
     it {
-      is_expected.to run.with_params({
-      'key1' => {
-        'subkey1' => { 'key2' => ['value1'] }
-      },
-      'key1.subkey1' => { 'key2' => ['value2'] }
-    }).and_return({
-      'key1.subkey1.key2' => %w[value2 value1]
-    }) }
+      expect(subject).to run.with_params({
+                                           'key1' => {
+                                             'subkey1' => { 'key2' => ['value1'] }
+                                           },
+                                           'key1.subkey1' => { 'key2' => ['value2'] }
+                                         }).and_return({
+                                                         'key1.subkey1.key2' => %w[value2 value1]
+                                                       })
+    }
 
     it {
-      is_expected.to run.with_params({
-      'key1' => {
-        'subkey1' => { 'key2' => 'value1' },
-        'subkey1.key2' => 'value2'
-      }
-    }).and_return({
-      'key1.subkey1.key2' => 'value2'
-    }) }
+      expect(subject).to run.with_params({
+                                           'key1' => {
+                                             'subkey1' => { 'key2' => 'value1' },
+                                             'subkey1.key2' => 'value2'
+                                           }
+                                         }).and_return({
+                                                         'key1.subkey1.key2' => 'value2'
+                                                       })
+    }
   end
 
   it 'does not change the original hashes' do
